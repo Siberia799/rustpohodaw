@@ -353,21 +353,41 @@ async function initGallery() {
   }
 })();
 
+// ---- BattleMetrics live status (home) ----
 document.addEventListener("DOMContentLoaded", () => {
-  const statusEl=document.getElementById("bmStatus");
-  const onlineEl=document.getElementById("bmOnline");
-  if(!statusEl||!onlineEl)return;
-  const update=async()=>{
-    try{
-      const r=await fetch("/bm",{cache:"no-store"});
-      const d=await r.json();
-      if(!d.ok)throw 0;
-      statusEl.textContent="Status: "+(d.status==="online"?"Online":"Offline");
-      onlineEl.textContent=`Online: ${d.players} / ${d.maxPlayers}`;
-    }catch{
-      statusEl.textContent="Status: Offline";
-      onlineEl.textContent="Online: —";
+  const statusEl = document.getElementById("bmStatus");
+  const onlineEl = document.getElementById("bmOnline");
+  if (!statusEl || !onlineEl) return;
+
+  const set = (status, players, maxPlayers) => {
+    const isOnline = String(status).toLowerCase() === "online";
+    statusEl.textContent = "Status: " + (isOnline ? "Online" : "Offline");
+    statusEl.classList.remove("ok","warn","bad");
+    statusEl.classList.add(isOnline ? "ok" : "bad");
+
+    if (players == null || maxPlayers == null) {
+      onlineEl.textContent = "Online: —";
+      onlineEl.classList.remove("ok","warn","bad");
+      onlineEl.classList.add("warn");
+      return;
+    }
+    onlineEl.textContent = `Online: ${players} / ${maxPlayers}`;
+    onlineEl.classList.remove("ok","warn","bad");
+    const pct = maxPlayers ? (players / maxPlayers) : 0;
+    onlineEl.classList.add(pct >= 0.9 ? "bad" : (pct >= 0.7 ? "warn" : "ok"));
+  };
+
+  const tick = async () => {
+    try {
+      const r = await fetch("/bm?server=37458252", { cache: "no-store" });
+      const d = await r.json();
+      if (!d.ok) throw new Error();
+      set(d.status, d.players, d.maxPlayers);
+    } catch {
+      set("offline", null, null);
     }
   };
-  update();setInterval(update,30000);
+
+  tick();
+  setInterval(tick, 30000);
 });
