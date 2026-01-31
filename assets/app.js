@@ -341,7 +341,8 @@ async function initBmMini(){
       if (!res.ok) throw new Error("api bm not ok");
       const d = await res.json();
       if (d && d.ok) return d;
-      throw new Error("api bm bad payload");
+      const code = d?.upstream_status ? ` upstream:${d.upstream_status}` : "";
+      throw new Error("api bm bad payload" + code);
     }catch(e){
       // 2) Fallback: try BattleMetrics API directly (ak CORS dovolí)
       const id = "37458252";
