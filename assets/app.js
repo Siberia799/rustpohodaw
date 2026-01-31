@@ -254,6 +254,21 @@ async function initHome(config) {
     joinTopBtn.addEventListener("click", (e) => { e.preventDefault(); location.href = CONNECT_LINK; setTimeout(()=>showConnectHelp(CONNECT_IPPORT || '203.16.163.84:24789'), 1200); });
     joinTopBtn.setAttribute("href", CONNECT_LINK);
   }
+
+  // Sticky CTA (uses same connectLink + serverIP as main buttons)
+  const stickyConnectBtn = document.getElementById("btnConnectSticky");
+  const stickyCopyBtn = document.getElementById("btnCopySticky");
+  if (stickyConnectBtn){
+    stickyConnectBtn.classList.add("btn-glow");
+    stickyConnectBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      location.href = config.connectLink;
+    });
+  }
+  if (stickyCopyBtn){
+    stickyCopyBtn.addEventListener("click", () => copyText(ip));
+  }
+
   if (discordBtn) {
     discordBtn.setAttribute("href", config.discord);
     discordBtn.setAttribute("target","_blank");
@@ -353,46 +368,6 @@ async function initGallery() {
   }
 })();
 
-// ---- Sticky CTA bindings (landing) ----
-document.addEventListener("DOMContentLoaded", () => {
-  const stickyConnect = document.getElementById("btnConnectSticky");
-  const stickyCopy = document.getElementById("btnCopySticky");
-  if (!stickyConnect || !stickyCopy) return;
-
-  const mainConnect = document.getElementById("btnConnect");
-  const mainCopy = document.getElementById("btnCopyIP");
-
-  if (mainConnect && mainConnect.getAttribute("href")) {
-    stickyConnect.setAttribute("href", mainConnect.getAttribute("href"));
-  } else {
-    // fallback: try use config link if app already set it later
-    setTimeout(() => {
-      if (mainConnect && mainConnect.getAttribute("href")) {
-        stickyConnect.setAttribute("href", mainConnect.getAttribute("href"));
-      }
-    }, 800);
-  }
-
-  stickyCopy.addEventListener("click", async () => {
-    if (mainCopy) {
-      mainCopy.click();
-      return;
-    }
-    const ipEl = document.getElementById("ipInline");
-    const ip = ipEl ? ipEl.textContent.trim() : "";
-    if (!ip) return;
-    try { await navigator.clipboard.writeText(ip); } catch {}
-  });
 });
 
-// ---- Sticky CTA visibility (hide at top) ----
-document.addEventListener("DOMContentLoaded", () => {
-  const cta = document.getElementById("stickyCta");
-  if (!cta) return;
-  const toggle = () => {
-    if (window.scrollY < 120) cta.classList.add("hidden");
-    else cta.classList.remove("hidden");
-  };
-  toggle();
-  window.addEventListener("scroll", toggle, { passive: true });
 });
