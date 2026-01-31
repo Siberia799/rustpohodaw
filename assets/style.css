@@ -717,3 +717,28 @@ body.wipe-today .card{
 @media (min-width: 980px){
   .bm-mini-grid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
 }
+
+
+/* ===== Rules list look ===== */
+.content ul{
+  padding-left: 0;
+  margin-left: 0;
+  list-style: none;
+}
+.content li{
+  padding: 12px 12px 12px 14px;
+  border-radius: 14px;
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.content li + li{ margin-top: 10px; }
+.content li::before{
+  content: "";
+  display:inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255,140,0,.95);
+  margin-right: 10px;
+  transform: translateY(-1px);
+}

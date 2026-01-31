@@ -32,7 +32,7 @@ export async function onRequestGet() {
   return new Response(JSON.stringify(payload), {
     headers: {
       "content-type": "application/json; charset=utf-8",
-      "cache-control": "public, max-age=30",
+      "cache-control": "no-store",
       "access-control-allow-origin": "*"
     }
   });

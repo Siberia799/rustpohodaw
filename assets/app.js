@@ -337,7 +337,7 @@ async function initBmMini(){
   const fetchData = async () => {
     // 1) Prefer same-origin Pages Function
     try{
-      const res = await fetch("/api/bm", { cache: "no-store" });
+      const res = await fetch(`/api/bm?t=${Date.now()}`, { cache: "no-store" });
       if (!res.ok) throw new Error("api bm not ok");
       const d = await res.json();
       if (d && d.ok) return d;
@@ -345,7 +345,7 @@ async function initBmMini(){
     }catch(e){
       // 2) Fallback: try BattleMetrics API directly (ak CORS dovolí)
       const id = "37458252";
-      const res = await fetch(`https://api.battlemetrics.com/servers/${id}`, { cache: "no-store" });
+      const res = await fetch(`https://api.battlemetrics.com/servers/${id}?t=${Date.now()}`, { cache: "no-store" });
       if (!res.ok) throw new Error("direct bm not ok");
       const data = await res.json();
       const a = data?.data?.attributes || {};
@@ -376,7 +376,13 @@ async function initBmMini(){
       if (totalEl) totalEl.textContent = (players != null) ? String(players + queue) : "—";
       if (mapEl) mapEl.textContent = d.map || "—";
 
-      if (updEl) updEl.textContent = "Aktualizované pred chvíľou";
+      if (updEl) {
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2,"0");
+        const mm = String(now.getMinutes()).padStart(2,"0");
+        const ss = String(now.getSeconds()).padStart(2,"0");
+        updEl.textContent = `Aktualizované: ${hh}:${mm}:${ss}`;
+      }
     } catch (e) {
       console.error("BM widget error:", e);
       statusEl.textContent = "—";
