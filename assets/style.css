@@ -986,3 +986,31 @@ main, .container {
   background: rgba(0,0,0,.32) !important;
 }
 
+
+/* ===== BG FIX (force) ===== */
+html, body{
+  min-height:100%;
+}
+html{
+  background: #0b0907;
+}
+body{
+  position: relative;
+  background-image: url('/assets/hero-bg.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
+  background-color: #0b0907;
+}
+@media (max-width: 900px){
+  body{ background-attachment: scroll; }
+}
+/* Ensure overlays sit above background but below content */
+body::before, body::after{
+  z-index: 0 !important;
+}
+main, header, footer, .sticky-cta{
+  position: relative;
+  z-index: 1;
+}
+/* Fallback if assets path fails, you can switch to /hero-bg.jpg */
