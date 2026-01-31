@@ -1,11 +1,13 @@
 // Rust Pohoda — static site JS (SK only)
 
+const CONNECT_LINK = "steam://run/252490//+connect%20203.16.163.84:24790";
+
 const DEFAULT_CONFIG = {
   serverName: "Rust Pohoda",
   tagline: "SLOVENSKÝ VANILLA SERVER",
   footerLine: "Rust Pohoda • Vanilla • Quad",
   serverIP: "203.16.163.84:24789",
-  connectLink: "steam://connect/203.16.163.84:24789",
+  connectLink: "steam://run/252490//+connect%20203.16.163.84:24790",
   wipe: "Monthly – každý prvý štvrtok v mesiaci o 20:00",
   mode: "Vanilla",
   teamLimit: "Quad (max 4)",
@@ -225,6 +227,12 @@ async function initCommon(config) {
   navBtn?.addEventListener("click", ()=> navMenu?.classList.toggle("open"));
 }
 
+
+function showConnectHelp(ipport){
+  const msg = `Ak sa Steam link neotvorí, spusti Rust a v konzole (F1) zadaj:\nclient.connect ${ipport}`;
+  alert(msg);
+}
+
 async function initHome(config) {
   const ip = config.serverIP;
   const copyBtn = $("#btnCopyIP");
@@ -238,13 +246,13 @@ async function initHome(config) {
   // but we keep click handlers for glow & consistency.
   if (connectBtn) {
     connectBtn.classList.add("btn-glow");
-    connectBtn.addEventListener("click", (e) => { e.preventDefault(); location.href = config.connectLink; });
-    connectBtn.setAttribute("href", config.connectLink);
+    connectBtn.addEventListener("click", (e) => { e.preventDefault(); location.href = CONNECT_LINK; setTimeout(()=>showConnectHelp(CONNECT_IPPORT || '203.16.163.84:24789'), 1200); });
+    connectBtn.setAttribute("href", CONNECT_LINK);
   }
   if (joinTopBtn) {
     joinTopBtn.classList.add("btn-glow");
-    joinTopBtn.addEventListener("click", (e) => { e.preventDefault(); location.href = config.connectLink; });
-    joinTopBtn.setAttribute("href", config.connectLink);
+    joinTopBtn.addEventListener("click", (e) => { e.preventDefault(); location.href = CONNECT_LINK; setTimeout(()=>showConnectHelp(CONNECT_IPPORT || '203.16.163.84:24789'), 1200); });
+    joinTopBtn.setAttribute("href", CONNECT_LINK);
   }
   if (discordBtn) {
     discordBtn.setAttribute("href", config.discord);
@@ -344,3 +352,22 @@ async function initGallery() {
     await initGallery();
   }
 })();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const statusEl=document.getElementById("bmStatus");
+  const onlineEl=document.getElementById("bmOnline");
+  if(!statusEl||!onlineEl)return;
+  const update=async()=>{
+    try{
+      const r=await fetch("/bm",{cache:"no-store"});
+      const d=await r.json();
+      if(!d.ok)throw 0;
+      statusEl.textContent="Status: "+(d.status==="online"?"Online":"Offline");
+      onlineEl.textContent=`Online: ${d.players} / ${d.maxPlayers}`;
+    }catch{
+      statusEl.textContent="Status: Offline";
+      onlineEl.textContent="Online: —";
+    }
+  };
+  update();setInterval(update,30000);
+});

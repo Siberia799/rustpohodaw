@@ -676,3 +676,8 @@ body.wipe-today .card{
   margin-right: 10px;
   transform: translateY(-1px);
 }
+
+.bm-widget{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+.bm-widget span{padding:8px 14px;border-radius:999px;
+background:rgba(0,0,0,.45);border:1px solid rgba(255,140,0,.25);
+font-weight:800;color:#fff}
