@@ -742,3 +742,36 @@ body.wipe-today .card{
   margin-right: 10px;
   transform: translateY(-1px);
 }
+
+
+/* ===== BattleMetrics iframe mini widget (reliable) ===== */
+.bm-mini { margin-top: 14px; }
+.bm-mini-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.bm-mini-title{ font-weight:1000; letter-spacing:.3px; }
+.bm-mini-link{ font-weight:900; text-decoration:none; opacity:.85; }
+.bm-mini-link:hover{ opacity:1; }
+
+.bm-mini-frame{
+  border-radius:14px;
+  overflow:hidden;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.22);
+}
+
+/* Výška je malá aby to pôsobilo ako widget */
+.bm-mini-iframe{
+  width:100%;
+  height: 240px;
+  border:0;
+}
+
+/* Malý trik: na mobile daj viac miesta */
+@media (max-width: 700px){
+  .bm-mini-iframe{ height: 320px; }
+}

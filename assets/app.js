@@ -320,87 +320,6 @@ async function initGallery() {
 
 
 
-// ---- BattleMetrics mini widget (via Pages Function /api/bm) ----
-async function initBmMini(){
-  const statusEl = document.getElementById("bmStatus");
-  if (!statusEl) return;
-
-  const playersEl = document.getElementById("bmPlayers");
-  const totalEl = document.getElementById("bmTotal");
-  const queueEl = document.getElementById("bmQueue");
-  const maxEl = document.getElementById("bmMax");
-  const mapEl = document.getElementById("bmMap");
-  const updEl = document.getElementById("bmUpdated");
-
-  const fmtStatus = (s) => s === "online" ? "Online" : (s === "offline" ? "Offline" : "Neznáme");
-
-  const fetchData = async () => {
-    // 1) Prefer same-origin Pages Function
-    try{
-      const res = await fetch(`/api/bm?t=${Date.now()}`, { cache: "no-store" });
-      const d = await res.json().catch(()=> ({}));
-      if (res.ok && d && d.ok) return d;
-
-      const upstream = d?.upstream_status ? String(d.upstream_status) : "";
-      const err = d?.error ? String(d.error) : (res.ok ? "bad_payload" : "http_" + res.status);
-      const msg = upstream ? `${err} (upstream ${upstream})` : err;
-      throw new Error(msg);
-    }catch(e){
-      // 2) Fallback: try BattleMetrics API directly (ak CORS dovolí)
-      const id = "37458252";
-      const res = await fetch(`https://api.battlemetrics.com/servers/${id}?t=${Date.now()}`, { cache: "no-store" });
-      if (!res.ok) throw new Error("direct bm not ok");
-      const data = await res.json();
-      const a = data?.data?.attributes || {};
-      return {
-        ok: true,
-        name: a.name || "",
-        status: a.status || "unknown",
-        players: a.players ?? null,
-        maxPlayers: a.maxPlayers ?? null,
-        queue: a.queue ?? null,
-        map: a.details?.map || null
-      };
-    }
-  };
-
-  const tick = async () => {
-    try {
-      const d = await fetchData();
-
-      statusEl.textContent = fmtStatus(d.status);
-      const players = (d.players != null) ? Number(d.players) : null;
-      const maxPlayers = (d.maxPlayers != null) ? Number(d.maxPlayers) : null;
-      const queue = (d.queue != null) ? Number(d.queue) : 0;
-
-      if (playersEl) playersEl.textContent = (players != null) ? String(players) : "—";
-      if (maxEl) maxEl.textContent = (maxPlayers != null) ? String(maxPlayers) : "—";
-      if (queueEl) queueEl.textContent = String(queue);
-      if (totalEl) totalEl.textContent = (players != null) ? String(players + queue) : "—";
-      if (mapEl) mapEl.textContent = d.map || "—";
-
-      if (updEl) {
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2,"0");
-        const mm = String(now.getMinutes()).padStart(2,"0");
-        const ss = String(now.getSeconds()).padStart(2,"0");
-        updEl.textContent = `Aktualizované: ${hh}:${mm}:${ss}`;
-      }
-    } catch (e) {
-      console.error("BM widget error:", e);
-      statusEl.textContent = "—";
-      if (playersEl) playersEl.textContent = "—";
-      if (maxEl) maxEl.textContent = "—";
-      if (queueEl) queueEl.textContent = "—";
-      if (totalEl) totalEl.textContent = "—";
-      if (mapEl) mapEl.textContent = "—";
-      if (updEl) updEl.textContent = `Nepodarilo sa načítať údaje: ${String(e.message||e)}`;
-    }
-  };
-
-  await tick();
-  setInterval(tick, 30000);
-}
 
 (async function main(){
   document.body.classList.add('wipe-pre');
@@ -412,7 +331,6 @@ async function initBmMini(){
     await initHome(config);
     await renderMarkdownInto("#mdHome", mdPathFor("home"));
     startWipeCountdown();
-    initBmMini();
   }
   if (page === "rules") {
     await renderMarkdownInto("#mdRules", mdPathFor("rules"));
