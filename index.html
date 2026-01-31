@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#0b0b0b"/>
+  <title>Rust Pohoda — Vanilla Quad</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body data-page="home">
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">
+        <div class="brand-badge" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M4 19h16" stroke="rgba(18,12,6,.9)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M6 16l6-12 6 12" stroke="rgba(18,12,6,.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 16h6" stroke="rgba(18,12,6,.9)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <div class="name" id="brandName">Rust Pohoda</div>
+          <div class="sub">VANILLA</div>
+        </div>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+
+      <nav class="nav" id="navMenu" aria-label="Primary">
+        <a href="/">Domov</a>
+        <a href="/rules">Pravidlá</a>
+        <a href="/vip">VIP</a>
+        <a href="/gallery">Galéria</a>
+        <a href="#" id="discordNav" onclick="return false;">Discord</a>
+      </nav>
+
+      <div class="cta">
+<a class="btn btn-primary btn-small" id="btnJoinTop" href="steam://connect/203.16.163.84:24789">PRIPOJIŤ SA</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="promo" id="promoBar" style="display:none"><div class="container promo-inner"><div class="promo-text" id="promoText"></div><a class="promo-link" id="promoLink" href="/rules">Pravidlá</a></div></div>
+
+<main class="hero">
+  <div class="container hero-grid">
+    <section class="card hero-card">
+      <div class="card-inner">
+        <div class="kicker">SLOVENSKÝ VANILLA SERVER</div>
+        <h1 class="h1" id="serverName">Rust Pohoda</h1>
+        <p class="tagline" id="tagline">Vanilla • Quad • Monthly wipe • No P2W</p>
+
+        <div class="actions">
+          <button class="btn btn-ghost" id="btnCopyIP">COPY IP <span style="opacity:.8" id="ipInline">203.16.163.84:24789</span></button>
+          <button class="btn btn-primary" id="btnConnect">CONNECT</button>
+          <a class="btn btn-ghost" id="discordLink" href="#" target="_blank" rel="noreferrer">DISCORD</a>
+          <a class="btn btn-ghost" id="donateLink" href="#" target="_blank" rel="noreferrer" style="display:none">💛 PODPORA</a>
+        </div>
+
+        <div class="chips">
+          <span class="chip">Wipe: <span id="chipWipe" style="margin-left:6px">—</span></span>
+          <span class="chip">Mode: <span id="chipMode" style="margin-left:6px">—</span></span>
+          <span class="chip">Team limit: <span id="chipTeam" style="margin-left:6px">—</span></span>
+</div>
+
+        <hr class="sep"/>
+
+        <div class="grid3">
+          <div class="card feature">
+            <div class="icon">✅</div>
+            <h3>Férový vanilla zážitok</h3>
+            <p>Bez pay-to-win výhod. Hrá rozhodovanie, skill a taktika.</p>
+          </div>
+          <div class="card feature">
+            <div class="icon">🛡️</div>
+            <h3>Aktívna administrácia</h3>
+            <p>Rýchle riešenie reportov, bugov a porušení pravidiel.</p>
+          </div>
+          <div class="card feature">
+            <div class="icon">💬</div>
+            <h3>Silná CZ/SK komunita</h3>
+            <p>Discord, oznámenia, eventy a čistá komunikácia.</p>
+          </div>
+        </div>
+
+        <div class="page-title">
+          <h2>Rýchle odkazy</h2>
+          <div class="note">Pravidlá • VIP • Galéria</div>
+        </div>
+        <div class="actions">
+          <a class="btn btn-ghost" href="/rules">📜 Pravidlá</a>
+          <a class="btn btn-ghost" href="/vip">⭐ VIP & Podpora</a>
+          <a class="btn btn-ghost" href="/gallery">🖼️ Galéria</a>
+        </div>
+        <div class="page-title" style="margin-top:18px">
+          <h2>Najdôležitejšie pravidlá</h2>
+          <div class="note">Skontroluj pred hraním</div>
+        </div>
+        <div class="toprules" id="topRules"></div>
+        <div class="actions" style="margin-top:10px">
+          <a class="btn btn-primary" href="/rules">Prečítať celé pravidlá</a>
+        </div>
+
+      </div>
+    </section>
+
+        <section class="card bm-card" id="bmWidget">
+          <div class="card-inner">
+            <div class="bm-head">
+              <div class="bm-title">Server status</div>
+              <a class="bm-link" href="https://www.battlemetrics.com/servers/rust/37458252" target="_blank" rel="noreferrer">Otvoriť v BattleMetrics</a>
+            </div>
+            <iframe
+              class="bm-iframe"
+              src="https://www.battlemetrics.com/servers/rust/37458252"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="BattleMetrics server widget">
+            </iframe>
+          </div>
+        </section>
+
+      <section class="card side-card" id="wipeWidget">
+        <div class="card-inner">
+          <div class="side-title">Wipe odpočet</div>
+          <div class="side-count" id="wipeCountdown">—</div>
+          <div class="side-sub" id="wipeTargetText">Najbližší wipe: —</div>
+        </div>
+      </section>
+
+
+    <aside class="side">
+      <div class="card mini">
+        <div class="card-inner">
+          <h3>Tip</h3>
+          <p>Ak máš problém alebo report, píš cez Discord – ideálne s videom alebo screenshotom.</p>
+        </div>
+      </div>
+      <div class="card mini">
+        <div class="card-inner">
+          <h3>Wipe</h3>
+          <p id="miniWipe">Monthly – každý prvý štvrtok v mesiaci o 20:00</p>
+        </div>
+      </div>
+      
+      <div class="card mini" id="bmWrap" style="display:none">
+        <div class="card-inner">
+          <h3>Server status</h3>
+          <p class="small" style="margin:0 0 10px">Online hráči, ping a detaily cez BattleMetrics.</p>
+          <div class="embed">
+            <iframe id="bmFrame" title="BattleMetrics" loading="lazy" referrerpolicy="no-referrer"></iframe>
+          </div>
+          <p class="small" style="margin:10px 0 0"><a id="bmLink" href="#" target="_blank" rel="noreferrer">Otvoriť na BattleMetrics</a></p>
+        </div>
+      </div>
+
+      <div class="card mini">
+        <div class="card-inner">
+          <h3>Obsah stránky</h3>
+          <div class="content" id="mdHome"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<script>
+  // mini wipe reflects chip wipe
+  document.addEventListener("DOMContentLoaded", () => {
+    const mini = document.getElementById("miniWipe");
+    const chip = document.getElementById("chipWipe");
+    const obs = new MutationObserver(() => { if (chip?.textContent) mini.textContent = chip.textContent; });
+    if (chip) obs.observe(chip, { childList: true, subtree: true });
+  });
+</script>
+
+
+  <footer class="footer">
+    <div class="container foot">
+      <div class="small">IP: <span id="footerIP"></span> • Wipe: <span id="footerWipe"></span></div>
+      <div class="small"><a id="footerDiscord" href="#" target="_blank" rel="noreferrer">Discord</a> • <span id="footerLine"></span></div>
+    </div>
+  </footer>
+
+  <script>
+    // wire discord nav link from config once loaded in app.js
+    // (fallback to footer link)
+    document.addEventListener("DOMContentLoaded", () => {
+      const nav = document.getElementById("discordNav");
+      const footer = document.getElementById("footerDiscord");
+      nav?.addEventListener("click", () => {
+        const href = footer?.getAttribute("href");
+        if (href && href !== "#") window.open(href, "_blank", "noreferrer");
+      });
+    });
+  </script>
+  <script src="/assets/app.js"></script>
+
+  <div class="modal" id="donateModal" aria-hidden="true">
+    <div class="modal-backdrop" id="donateModalBackdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="donateModalTitle">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="donateModalTitle">Podpora</div>
+          <div class="modal-sub" id="donateModalSub">Tebex</div>
+        </div>
+        <button class="btn btn-ghost btn-small" id="donateModalClose" type="button">Zavrieť</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text" id="donateModalText"></p>
+        
+        <div class="actions" style="margin: 12px 0 0">
+          <button class="btn btn-ghost" id="btnCopyIPModal" type="button">COPY IP</button>
+          <button class="btn btn-primary" id="btnConnectModal" type="button">CONNECT</button>
+        </div>
+
+        <div class="actions" style="margin: 12px 0 0">
+          <a class="btn btn-primary" id="donateDiscordBtn" href="#" target="_blank" rel="noreferrer">Discord</a>
+          <button class="btn btn-ghost" id="donateOkBtn" type="button">OK</button>
+        </div>
+        <p class="small" style="margin: 10px 0 0; color: rgba(255,255,255,.65)" id="donateModalHint"></p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

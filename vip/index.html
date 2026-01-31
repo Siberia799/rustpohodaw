@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#0b0b0b"/>
+  <title>VIP — Rust Pohoda</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body data-page="vip">
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="/">
+        <div class="brand-badge" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M4 19h16" stroke="rgba(18,12,6,.9)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M6 16l6-12 6 12" stroke="rgba(18,12,6,.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 16h6" stroke="rgba(18,12,6,.9)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <div class="name" id="brandName">Rust Pohoda</div>
+          <div class="sub">VANILLA</div>
+        </div>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+
+      <nav class="nav" id="navMenu" aria-label="Primary">
+        <a href="/">Domov</a>
+        <a href="/rules">Pravidlá</a>
+        <a href="/vip">VIP</a>
+        <a href="/gallery">Galéria</a>
+        <a href="#" id="discordNav" onclick="return false;">Discord</a>
+      </nav>
+
+      <div class="cta">
+<a class="btn btn-primary btn-small" id="btnJoinTop" href="steam://connect/203.16.163.84:24789">PRIPOJIŤ SA</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+  <div class="container">
+    <div class="page-title">
+      <h2>VIP & Sponzor</h2>
+      <div class="note">No Pay-to-Win • Podpora servera</div>
+    </div>
+    <section class="card">
+      <div class="card-inner content" id="mdVip"></div>
+    </section>
+    <div class="actions" style="margin-top:14px">
+      <a class="btn btn-primary" href="https://discord.com/invite/4eY75AnPCj" target="_blank" rel="noreferrer">Kontakt cez Discord</a>
+      <a class="btn btn-ghost" id="donateLinkVip" href="#" target="_blank" rel="noreferrer" style="display:none">💛 Podpora / Tebex</a>
+      <a class="btn btn-ghost" href="/rules">Pravidlá</a>
+    </div>
+  </div>
+</main>
+
+  <footer class="footer">
+    <div class="container foot">
+      <div class="small">IP: <span id="footerIP"></span> • Wipe: <span id="footerWipe"></span></div>
+      <div class="small"><a id="footerDiscord" href="#" target="_blank" rel="noreferrer">Discord</a> • <span id="footerLine"></span></div>
+    </div>
+  </footer>
+
+  <script>
+    // wire discord nav link from config once loaded in app.js
+    // (fallback to footer link)
+    document.addEventListener("DOMContentLoaded", () => {
+      const nav = document.getElementById("discordNav");
+      const footer = document.getElementById("footerDiscord");
+      nav?.addEventListener("click", () => {
+        const href = footer?.getAttribute("href");
+        if (href && href !== "#") window.open(href, "_blank", "noreferrer");
+      });
+    });
+  </script>
+  <script src="/assets/app.js"></script>
+
+  <div class="modal" id="donateModal" aria-hidden="true">
+    <div class="modal-backdrop" id="donateModalBackdrop"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="donateModalTitle">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="donateModalTitle">Podpora</div>
+          <div class="modal-sub" id="donateModalSub">Tebex</div>
+        </div>
+        <button class="btn btn-ghost btn-small" id="donateModalClose" type="button">Zavrieť</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text" id="donateModalText"></p>
+        
+        <div class="actions" style="margin: 12px 0 0">
+          <button class="btn btn-ghost" id="btnCopyIPModal" type="button">COPY IP</button>
+          <button class="btn btn-primary" id="btnConnectModal" type="button">CONNECT</button>
+        </div>
+
+        <div class="actions" style="margin: 12px 0 0">
+          <a class="btn btn-primary" id="donateDiscordBtn" href="#" target="_blank" rel="noreferrer">Discord</a>
+          <button class="btn btn-ghost" id="donateOkBtn" type="button">OK</button>
+        </div>
+        <p class="small" style="margin: 10px 0 0; color: rgba(255,255,255,.65)" id="donateModalHint"></p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

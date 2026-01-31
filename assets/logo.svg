@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 140" role="img" aria-label="Rust Pohoda">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ff9a1f"/>
+      <stop offset="1" stop-color="#ff4d00"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Icon: rugged gear + bolt -->
+  <g transform="translate(22,16)">
+    <circle cx="54" cy="54" r="44" fill="none" stroke="url(#g)" stroke-width="10" opacity="0.95"/>
+    <!-- teeth -->
+    <g fill="url(#g)" opacity="0.95">
+      <rect x="49" y="0" width="10" height="16" rx="2"/>
+      <rect x="49" y="92" width="10" height="16" rx="2"/>
+      <rect x="0" y="49" width="16" height="10" rx="2"/>
+      <rect x="92" y="49" width="16" height="10" rx="2"/>
+      <rect x="14" y="14" width="14" height="10" rx="2" transform="rotate(-45 21 19)"/>
+      <rect x="80" y="14" width="14" height="10" rx="2" transform="rotate(45 87 19)"/>
+      <rect x="14" y="84" width="14" height="10" rx="2" transform="rotate(45 21 89)"/>
+      <rect x="80" y="84" width="14" height="10" rx="2" transform="rotate(-45 87 89)"/>
+    </g>
+
+    <!-- bolt -->
+    <path d="M58 18L36 62h20l-8 28 26-40H54l4-32z" fill="#0b0705" opacity="0.92"/>
+    <path d="M58 18L36 62h20l-8 28 26-40H54l4-32z" fill="url(#g)" opacity="0.85" filter="url(#glow)"/>
+  </g>
+
+  <!-- Text -->
+  <g transform="translate(150,22)" fill="none">
+    <text x="0" y="56" font-family="system-ui, -apple-system, Segoe UI, Inter, Arial" font-size="54" font-weight="1000" fill="rgba(255,255,255,0.92)" letter-spacing="0.8">RUST</text>
+    <text x="0" y="104" font-family="system-ui, -apple-system, Segoe UI, Inter, Arial" font-size="44" font-weight="900" fill="url(#g)" letter-spacing="0.6">POHODA</text>
+  </g>
+</svg>

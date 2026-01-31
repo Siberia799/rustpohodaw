@@ -1,0 +1,42 @@
+{
+  "serverName": "CZ/SK Rust Pohoda",
+  "serverIP": "203.16.163.84:24789",
+  "connectLink": "steam://connect/203.16.163.84:24789",
+  "discord": "https://discord.com/invite/4eY75AnPCj",
+  "wipe": "Monthly – každý prvý štvrtok v mesiaci o 20:00",
+  "mode": "Vanilla",
+  "teamLimit": "Quad",
+  "tagline": "Vanilla • Quad • Monthly wipe • No P2W",
+  "footerLine": "Vanilla • Quad • No P2W • Fair Play",
+  "battlemetricsServerId": "",
+  "battlemetricsLabel": "BattleMetrics",
+  "defaultLang": "sk",
+  "donateLabel": "Podpor server",
+  "donateUrl": "",
+  "promoEnabled": true,
+  "promoText_sk": "Najbližší wipe: 1. štvrtok v mesiaci o 20:00 • Vanilla • Quad • No P2W",
+  "promoText_cz": "Nejbližší wipe: 1. čtvrtek v měsíci ve 20:00 • Vanilla • Quad • No P2W",
+  "topRules_sk": [
+    "Max tím: 4 (Quad)",
+    "Max hodiny tímu: 10 000",
+    "Verejný Steam profil",
+    "Zákaz alt účtov",
+    "Zákaz teamingu medzi tímami"
+  ],
+  "topRules_cz": [
+    "Max tým: 4 (Quad)",
+    "Max hodiny týmu: 10 000",
+    "Veřejný Steam profil",
+    "Zákaz alt účtů",
+    "Zákaz teamingu mezi týmy"
+  ],
+  "donateLabel_sk": "Podpora servera",
+  "donateLabel_cz": "Podpora serveru",
+  "donateComingSoon": true,
+  "donateComingSoonText_sk": "Tebex store je momentálne v schvaľovaní. Podpora servera bude dostupná čoskoro.",
+  "donateComingSoonText_cz": "Tebex store je momentálně ve schvalování. Podpora serveru bude dostupná brzy.",
+  "donateDiscordCta_sk": "Ak chceš podporiť hneď, ozvi sa nám na Discorde.",
+  "donateDiscordCta_cz": "Pokud chceš podpořit hned, napiš nám na Discord.",
+  "donateDiscordText_sk": "Kontakt cez Discord",
+  "donateDiscordText_cz": "Kontakt přes Discord"
+}
