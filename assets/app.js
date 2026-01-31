@@ -338,11 +338,13 @@ async function initBmMini(){
     // 1) Prefer same-origin Pages Function
     try{
       const res = await fetch(`/api/bm?t=${Date.now()}`, { cache: "no-store" });
-      if (!res.ok) throw new Error("api bm not ok");
-      const d = await res.json();
-      if (d && d.ok) return d;
-      const code = d?.upstream_status ? ` upstream:${d.upstream_status}` : "";
-      throw new Error("api bm bad payload" + code);
+      const d = await res.json().catch(()=> ({}));
+      if (res.ok && d && d.ok) return d;
+
+      const upstream = d?.upstream_status ? String(d.upstream_status) : "";
+      const err = d?.error ? String(d.error) : (res.ok ? "bad_payload" : "http_" + res.status);
+      const msg = upstream ? `${err} (upstream ${upstream})` : err;
+      throw new Error(msg);
     }catch(e){
       // 2) Fallback: try BattleMetrics API directly (ak CORS dovolí)
       const id = "37458252";
@@ -392,7 +394,7 @@ async function initBmMini(){
       if (queueEl) queueEl.textContent = "—";
       if (totalEl) totalEl.textContent = "—";
       if (mapEl) mapEl.textContent = "—";
-      if (updEl) updEl.textContent = "Nepodarilo sa načítať údaje.";
+      if (updEl) updEl.textContent = `Nepodarilo sa načítať údaje: ${String(e.message||e)}`;
     }
   };
 
