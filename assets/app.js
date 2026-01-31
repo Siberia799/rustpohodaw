@@ -318,6 +318,45 @@ async function initGallery() {
   document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") close(); });
 }
 
+
+
+// ---- BattleMetrics mini widget (via Pages Function /api/bm) ----
+async function initBmMini(){
+  const statusEl = document.getElementById("bmStatus");
+  if (!statusEl) return;
+
+  const playersEl = document.getElementById("bmPlayers");
+  const queueEl = document.getElementById("bmQueue");
+  const mapEl = document.getElementById("bmMap");
+  const updEl = document.getElementById("bmUpdated");
+
+  const fmtStatus = (s) => s === "online" ? "Online" : (s === "offline" ? "Offline" : "Neznáme");
+
+  const tick = async () => {
+    try {
+      const res = await fetch("/api/bm", { cache: "no-store" });
+      const d = await res.json();
+      if (!d.ok) throw new Error("bad");
+
+      statusEl.textContent = fmtStatus(d.status);
+      playersEl.textContent = (d.players != null && d.maxPlayers != null) ? `${d.players}/${d.maxPlayers}` : "—";
+      queueEl.textContent = (d.queue != null) ? String(d.queue) : "0";
+      mapEl.textContent = d.map || "—";
+
+      updEl.textContent = "Aktualizované pred chvíľou";
+    } catch (e) {
+      statusEl.textContent = "—";
+      playersEl.textContent = "—";
+      queueEl.textContent = "—";
+      mapEl.textContent = "—";
+      updEl.textContent = "Nepodarilo sa načítať údaje.";
+    }
+  };
+
+  await tick();
+  setInterval(tick, 30000);
+}
+
 (async function main(){
   document.body.classList.add('wipe-pre');
   const config = await loadConfig();
@@ -328,6 +367,7 @@ async function initGallery() {
     await initHome(config);
     await renderMarkdownInto("#mdHome", mdPathFor("home"));
     startWipeCountdown();
+    initBmMini();
   }
   if (page === "rules") {
     await renderMarkdownInto("#mdRules", mdPathFor("rules"));

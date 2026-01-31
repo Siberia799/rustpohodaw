@@ -103,30 +103,44 @@
 
       </div>
     </section>
-
-        <section class="card bm-card" id="bmWidget">
-          <div class="card-inner">
-            <div class="bm-head">
-              <div class="bm-title">Server status</div>
-              <a class="bm-link" href="https://www.battlemetrics.com/servers/rust/37458252" target="_blank" rel="noreferrer">Otvoriť v BattleMetrics</a>
-            </div>
-            <iframe
-              class="bm-iframe"
-              src="https://www.battlemetrics.com/servers/rust/37458252"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              title="BattleMetrics server widget">
-            </iframe>
-          </div>
-        </section>
-
-      <section class="card side-card" id="wipeWidget">
+<section class="card side-card" id="wipeWidget">
         <div class="card-inner">
           <div class="side-title">Wipe odpočet</div>
           <div class="side-count" id="wipeCountdown">—</div>
           <div class="side-sub" id="wipeTargetText">Najbližší wipe: —</div>
         </div>
       </section>
+
+      <section class="card bm-mini" id="bmMini">
+        <div class="card-inner">
+          <div class="bm-mini-head">
+            <div class="bm-mini-title">Server štatistiky</div>
+            <a class="bm-mini-link" href="https://www.battlemetrics.com/servers/rust/37458252" target="_blank" rel="noreferrer">BattleMetrics</a>
+          </div>
+
+          <div class="bm-mini-grid">
+            <div class="bm-mini-item">
+              <div class="k">Status</div>
+              <div class="v" id="bmStatus">—</div>
+            </div>
+            <div class="bm-mini-item">
+              <div class="k">Hráči</div>
+              <div class="v" id="bmPlayers">—</div>
+            </div>
+            <div class="bm-mini-item">
+              <div class="k">Queue</div>
+              <div class="v" id="bmQueue">—</div>
+            </div>
+            <div class="bm-mini-item">
+              <div class="k">Mapa</div>
+              <div class="v" id="bmMap">—</div>
+            </div>
+          </div>
+
+          <div class="bm-mini-foot" id="bmUpdated">Aktualizujem…</div>
+        </div>
+      </section>
+
 
 
     <aside class="side">

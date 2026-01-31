@@ -657,3 +657,38 @@ body.wipe-today .card{
   border-color: rgba(255,90,0,.28);
   box-shadow: 0 0 0 1px rgba(255,90,0,.10), 0 10px 40px rgba(0,0,0,.35);
 }
+
+
+/* ===== BattleMetrics mini widget ===== */
+.bm-mini { margin-top: 14px; }
+.bm-mini-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.bm-mini-title{ font-weight:1000; letter-spacing:.3px; }
+.bm-mini-link{ font-weight:900; text-decoration:none; opacity:.85; }
+.bm-mini-link:hover{ opacity:1; }
+
+.bm-mini-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:10px;
+}
+.bm-mini-item{
+  padding:12px;
+  border-radius:14px;
+  background: rgba(0,0,0,.22);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.bm-mini-item .k{ font-size:12px; opacity:.75; font-weight:800; }
+.bm-mini-item .v{ font-size:18px; font-weight:1000; letter-spacing:.2px; margin-top:4px; }
+
+.bm-mini-foot{
+  margin-top:10px;
+  font-size:12px;
+  opacity:.72;
+  font-weight:800;
+}
