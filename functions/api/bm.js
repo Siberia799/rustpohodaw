@@ -9,7 +9,7 @@ export async function onRequestGet() {
   if (!res.ok) {
     return new Response(JSON.stringify({ ok: false }), {
       status: 502,
-      headers: { "content-type": "application/json; charset=utf-8" }
+      headers: { "content-type": "application/json; charset=utf-8", "access-control-allow-origin": "*" }
     });
   }
 
@@ -32,7 +32,8 @@ export async function onRequestGet() {
   return new Response(JSON.stringify(payload), {
     headers: {
       "content-type": "application/json; charset=utf-8",
-      "cache-control": "public, max-age=30"
+      "cache-control": "public, max-age=30",
+      "access-control-allow-origin": "*"
     }
   });
 }

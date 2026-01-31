@@ -692,3 +692,28 @@ body.wipe-today .card{
   opacity:.72;
   font-weight:800;
 }
+
+
+/* ===== Sidebar stack (wipe + stats) ===== */
+.sidebar-stack{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+@media (min-width: 980px){
+  .hero .container > .sidebar-stack{
+    grid-column: 2;
+    position: sticky;
+    top: 88px;
+  }
+  /* disable sticky on individual cards if present */
+  .hero .container > .card.side-card{ position: static !important; top: auto !important; }
+}
+
+/* BattleMetrics mini grid responsive */
+.bm-mini-grid{
+  grid-template-columns: repeat(2, minmax(0,1fr));
+}
+@media (min-width: 980px){
+  .bm-mini-grid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
