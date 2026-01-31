@@ -384,3 +384,15 @@ document.addEventListener("DOMContentLoaded", () => {
     try { await navigator.clipboard.writeText(ip); } catch {}
   });
 });
+
+// ---- Sticky CTA visibility (hide at top) ----
+document.addEventListener("DOMContentLoaded", () => {
+  const cta = document.getElementById("stickyCta");
+  if (!cta) return;
+  const toggle = () => {
+    if (window.scrollY < 120) cta.classList.add("hidden");
+    else cta.classList.remove("hidden");
+  };
+  toggle();
+  window.addEventListener("scroll", toggle, { passive: true });
+});
