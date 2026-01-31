@@ -2,13 +2,35 @@ export async function onRequest(context) {
   const url = new URL(context.request.url);
   const serverId = url.searchParams.get("server") || "37458252";
 
-  const res = await fetch(`https://api.battlemetrics.com/servers/${encodeURIComponent(serverId)}`, {
-    headers: { "Accept": "application/vnd.api+json" }
-  });
+  // Set this in Cloudflare Pages -> Settings -> Environment variables
+  // Name: BM_TOKEN   Value: <your BattleMetrics API token>
+  const token = (context.env && context.env.BM_TOKEN) ? String(context.env.BM_TOKEN).trim() : "";
+
+  const headers = { "Accept": "application/vnd.api+json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  const apiUrl = `https://api.battlemetrics.com/servers/${encodeURIComponent(serverId)}`;
+
+  let res;
+  try {
+    res = await fetch(apiUrl, { headers });
+  } catch (e) {
+    return new Response(JSON.stringify({ ok:false, error:"fetch_failed" }), {
+      status: 502,
+      headers: { "Content-Type":"application/json; charset=utf-8", "Cache-Control":"no-store" }
+    });
+  }
 
   if (!res.ok) {
-    return new Response(JSON.stringify({ ok:false, status: res.status }), {
-      status: 502,
+    // BattleMetrics returns 403 when token missing/invalid or rate-limited
+    return new Response(JSON.stringify({
+      ok:false,
+      status: res.status,
+      hint: (res.status === 403)
+        ? "BattleMetrics API vracia 403. Nastav BM_TOKEN v Cloudflare Pages (Environment variables)."
+        : "BattleMetrics API error."
+    }), {
+      status: 200,
       headers: { "Content-Type":"application/json; charset=utf-8", "Cache-Control":"no-store" }
     });
   }
@@ -23,9 +45,6 @@ export async function onRequest(context) {
     maxPlayers: a.maxPlayers ?? null
   }), {
     status: 200,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "public, max-age=30"
-    }
+    headers: { "Content-Type":"application/json; charset=utf-8", "Cache-Control":"public, max-age=30" }
   });
 }
