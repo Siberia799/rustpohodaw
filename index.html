@@ -1,17 +1,19 @@
 <!doctype html>
 <html lang="sk">
 <head>
+    <meta name="description" content="Rust Pohoda – slovenský Vanilla Quad Rust server. Monthly wipe každý prvý štvrtok o 20:00. Fair play, bez P2W, aktívna komunita."/>
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/favicon.png">
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#0b0b0b"/>
-  <title>Rust Pohoda — Vanilla Quad</title>
+  <title>Rust Pohoda • Slovenský Vanilla Quad Rust Server</title>
   <link rel="stylesheet" href="/assets/style.css"/>
 </head>
 <body data-page="home">
   <header class="topbar">
-    <div class="container topbar-inner">
+        <meta name="description" content="Rust Pohoda – slovenský Vanilla Quad Rust server. Monthly wipe každý prvý štvrtok o 20:00. Fair play, bez P2W, aktívna komunita."/>
+<div class="container topbar-inner">
       <a class="brand" href="/">
         <div class="brand-badge" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -57,12 +59,6 @@
           <button class="btn btn-primary" id="btnConnect">CONNECT</button>
           <a class="btn btn-ghost" id="discordLink" href="#" target="_blank" rel="noreferrer">DISCORD</a>
           <a class="btn btn-ghost" id="donateLink" href="#" target="_blank" rel="noreferrer" style="display:none">💛 PODPORA</a>
-        </div>
-
-        
-        <div class="bm-widget" aria-label="Server status">
-          <span class="bm-pill" id="bmStatus">Status: —</span>
-          <span class="bm-pill" id="bmOnline">Online: —</span>
         </div>
 
         <div class="chips">
@@ -155,6 +151,59 @@
       </div>
     </aside>
   </div>
+
+    <section class="grid-2 info-sections">
+      <div class="card">
+        <div class="card-inner">
+          <h2 class="h2">Prečo hrať na Rust Pohoda?</h2>
+          <div class="feature-grid">
+            <div class="feature"><div class="dot"></div><div><div class="ft">Čistá Vanilla</div><div class="fd">Žiadne P2W, žiadne modované výhody.</div></div></div>
+            <div class="feature"><div class="dot"></div><div><div class="ft">Férový Quad limit</div><div class="fd">Max 4 v tíme = lepšie PvP aj raid balanc.</div></div></div>
+            <div class="feature"><div class="dot"></div><div><div class="ft">Aktívna komunita</div><div class="fd">CZ/SK hráči, rýchle info cez Discord.</div></div></div>
+            <div class="feature"><div class="dot"></div><div><div class="ft">Pravidelný wipe</div><div class="fd">Každý prvý štvrtok v mesiaci o 20:00.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-inner">
+          <h2 class="h2">Rýchle pravidlá</h2>
+          <ul class="quickrules">
+            <li><span class="num">1</span> Max 4 hráči v tíme (Quad).</li>
+            <li><span class="num">2</span> Max 10 000 hodín spolu za tím.</li>
+            <li><span class="num">3</span> Zákaz cheatov, skriptov, exploitov a bug abuse.</li>
+            <li><span class="num">4</span> Zákaz teamingu medzi tímami (raid/PvP/loot).</li>
+            <li><span class="num">5</span> Žiadne urážky, rasizmus a toxické správanie.</li>
+          </ul>
+          <a class="linkbtn" href="/rules/">Zobraziť celé pravidlá →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card faq-card">
+      <div class="card-inner">
+        <h2 class="h2">FAQ</h2>
+        <div class="faq">
+          <details>
+            <summary>Kedy je wipe?</summary>
+            <div class="faq-body">Monthly – každý prvý štvrtok v mesiaci o 20:00.</div>
+          </details>
+          <details>
+            <summary>Je server modovaný?</summary>
+            <div class="faq-body">Nie. Je to čistá Vanilla verzia.</div>
+          </details>
+          <details>
+            <summary>Koľko hráčov môže byť v tíme?</summary>
+            <div class="faq-body">Quad – maximálne 4 aktívni členovia.</div>
+          </details>
+          <details>
+            <summary>Ako nahlásim cheatera alebo problém?</summary>
+            <div class="faq-body">Najlepšie cez Discord (s video/screenshot dôkazom).</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
 </main>
 <script>
   // mini wipe reflects chip wipe
@@ -214,6 +263,12 @@
       </div>
     </div>
   </div>
+
+
+    <div class="sticky-cta" id="stickyCta" aria-label="Rýchle pripojenie">
+      <a class="btn btn-primary" id="btnConnectSticky" href="#">PRIPOJIŤ SA</a>
+      <button class="btn btn-ghost" id="btnCopySticky" type="button">KOPÍROVAŤ IP</button>
+    </div>
 
 </body>
 </html>

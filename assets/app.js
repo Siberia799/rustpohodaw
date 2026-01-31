@@ -353,41 +353,34 @@ async function initGallery() {
   }
 })();
 
-// ---- BattleMetrics live status (home) ----
+// ---- Sticky CTA bindings (landing) ----
 document.addEventListener("DOMContentLoaded", () => {
-  const statusEl = document.getElementById("bmStatus");
-  const onlineEl = document.getElementById("bmOnline");
-  if (!statusEl || !onlineEl) return;
+  const stickyConnect = document.getElementById("btnConnectSticky");
+  const stickyCopy = document.getElementById("btnCopySticky");
+  if (!stickyConnect || !stickyCopy) return;
 
-  const set = (status, players, maxPlayers) => {
-    const isOnline = String(status).toLowerCase() === "online";
-    statusEl.textContent = "Status: " + (isOnline ? "Online" : "Offline");
-    statusEl.classList.remove("ok","warn","bad");
-    statusEl.classList.add(isOnline ? "ok" : "bad");
+  const mainConnect = document.getElementById("btnConnect");
+  const mainCopy = document.getElementById("btnCopyIP");
 
-    if (players == null || maxPlayers == null) {
-      onlineEl.textContent = "Online: —";
-      onlineEl.classList.remove("ok","warn","bad");
-      onlineEl.classList.add("warn");
+  if (mainConnect && mainConnect.getAttribute("href")) {
+    stickyConnect.setAttribute("href", mainConnect.getAttribute("href"));
+  } else {
+    // fallback: try use config link if app already set it later
+    setTimeout(() => {
+      if (mainConnect && mainConnect.getAttribute("href")) {
+        stickyConnect.setAttribute("href", mainConnect.getAttribute("href"));
+      }
+    }, 800);
+  }
+
+  stickyCopy.addEventListener("click", async () => {
+    if (mainCopy) {
+      mainCopy.click();
       return;
     }
-    onlineEl.textContent = `Online: ${players} / ${maxPlayers}`;
-    onlineEl.classList.remove("ok","warn","bad");
-    const pct = maxPlayers ? (players / maxPlayers) : 0;
-    onlineEl.classList.add(pct >= 0.9 ? "bad" : (pct >= 0.7 ? "warn" : "ok"));
-  };
-
-  const tick = async () => {
-    try {
-      const r = await fetch("/bm?server=37458252", { cache: "no-store" });
-      const d = await r.json();
-      if (!d.ok) throw new Error();
-      set(d.status, d.players, d.maxPlayers);
-    } catch {
-      set("offline", null, null);
-    }
-  };
-
-  tick();
-  setInterval(tick, 30000);
+    const ipEl = document.getElementById("ipInline");
+    const ip = ipEl ? ipEl.textContent.trim() : "";
+    if (!ip) return;
+    try { await navigator.clipboard.writeText(ip); } catch {}
+  });
 });
