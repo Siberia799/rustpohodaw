@@ -331,6 +331,7 @@ async function initGallery() {
     await initHome(config);
     await renderMarkdownInto("#mdHome", mdPathFor("home"));
     startWipeCountdown();
+    
   }
   if (page === "rules") {
     await renderMarkdownInto("#mdRules", mdPathFor("rules"));
