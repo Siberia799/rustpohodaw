@@ -176,9 +176,6 @@ hr.sep{border:0; border-top:1px solid rgba(255,255,255,.08); margin:16px 0}
   margin: 14px 0 22px;
 }
 @media (max-width: 900px){ .grid3{grid-template-columns:1fr} }
-.feature{
-  padding:18px;
-}
 .feature .icon{
   width:44px; height:44px; border-radius:14px;
   display:grid; place-items:center;
@@ -701,20 +698,6 @@ body.wipe-today .card{
 @media (max-width: 700px){
   .feature-grid{ grid-template-columns: 1fr; }
 }
-.feature{
-  display:flex;
-  gap:10px;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.20);
-}
-.feature .dot{
-  width:10px;height:10px;border-radius:50%;
-  margin-top:4px;
-  background: rgba(255,140,0,.85);
-  box-shadow: 0 0 18px rgba(255,140,0,.25);
-}
 .ft{ font-weight: 1000; }
 .fd{ opacity: .85; font-weight: 700; font-size: 13px; margin-top: 2px; }
 
@@ -842,7 +825,6 @@ body.wipe-today .card{
 }
 
 /* Make feature blocks tighter and more consistent */
-.feature{ padding: 12px; }
 .quickrules li{ padding: 12px; }
 
 /* FAQ in two columns on desktop */
@@ -861,3 +843,85 @@ body.wipe-today .card{
   pointer-events: none;
   transform: translateY(10px);
 }
+
+/* ===== Max polish: feature cards + server strip ===== */
+.server-strip{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+@media (max-width: 900px){
+  .server-strip{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.strip-item{
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.22);
+  padding: 12px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 10px;
+}
+.strip-item .k{
+  font-weight: 1000;
+  opacity: .78;
+  letter-spacing: .2px;
+}
+.strip-item .v{
+  font-weight: 1000;
+  text-align:right;
+}
+
+.feature-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 700px){
+  .feature-grid{ grid-template-columns: 1fr; }
+}
+.feature2{
+  display:flex;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.22);
+  align-items:flex-start;
+  min-height: 88px;
+  overflow:hidden;
+}
+.feature2:hover{
+  border-color: rgba(255,140,0,.30);
+  box-shadow: 0 0 0 1px rgba(255,140,0,.10), 0 16px 40px rgba(0,0,0,.25);
+}
+.feature2 .ico{
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: rgba(255,140,0,.14);
+  border: 1px solid rgba(255,140,0,.22);
+  flex: 0 0 auto;
+  font-size: 18px;
+  line-height: 1;
+}
+.feature2 .ft{
+  font-weight: 1000;
+  line-height: 1.15;
+  margin-bottom: 4px;
+}
+.feature2 .fd{
+  font-weight: 800;
+  font-size: 13px;
+  opacity: .85;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+/* Cards spacing */
+.card-inner{ line-height: 1.35; }
