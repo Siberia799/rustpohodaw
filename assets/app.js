@@ -187,8 +187,11 @@ function fmtCountdown(ms){
 function startWipeCountdown(){
   const el = document.getElementById("wipeCountdown");
   const targetEl = document.getElementById("wipeTargetText");
+  // optional mini widget near BattleMetrics status
+  const elMini = document.getElementById("wipeCountdownMini");
+  const targetElMini = document.getElementById("wipeTargetTextMini");
   const tz = "Europe/Bratislava";
-  if (!el) return;
+  if (!el && !elMini) return;
 
   const hardWipeUtc = makeDateInTZ(2026, 2, 5, 20, 0, 0, tz);
 
@@ -198,9 +201,13 @@ function startWipeCountdown(){
     if (!wipe) return;
 
     const wp = tzParts(wipe, tz);
-    if (targetEl) targetEl.textContent = `Najbližší wipe: ${String(wp.day).padStart(2,'0')}.${String(wp.month).padStart(2,'0')}.${wp.year} 20:00`;
+    const targetText = `Najbližší wipe: ${String(wp.day).padStart(2,'0')}.${String(wp.month).padStart(2,'0')}.${wp.year} 20:00`;
+    if (targetEl) targetEl.textContent = targetText;
+    if (targetElMini) targetElMini.textContent = targetText;
 
-    el.textContent = fmtCountdown(wipe.getTime() - now.getTime());
+    const countdown = fmtCountdown(wipe.getTime() - now.getTime());
+    if (el) el.textContent = countdown;
+    if (elMini) elMini.textContent = countdown;
   };
 
   tick();

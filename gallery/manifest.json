@@ -1,3 +1,24 @@
 {
-  "images": []
+  "images": [
+    {
+      "file": "326b414d-88c0-446d-a2c1-00f5c7ed947a.jpg",
+      "title": "Prestrelka na pláži",
+      "desc": "Tímový útok pri pobreží"
+    },
+    {
+      "file": "896dcb62-7433-429d-8faf-565b79a56178.jpg",
+      "title": "Raid vo vode",
+      "desc": "Použitie výbušnín pri raide vodnej základne"
+    },
+    {
+      "file": "336c9c78-1934-4bf2-b4c6-b0ed4e98a2d3.jpg",
+      "title": "Vežová základňa nad vodou",
+      "desc": "Základňa na vyvýšenom mieste nad oceánom"
+    },
+    {
+      "file": "257da1df-95dd-4427-a8ce-7491e709f2b1.jpg",
+      "title": "Raid v interiéri",
+      "desc": "Blízky boj vo vnútri nepriateľskej základne"
+    }
+  ]
 }
