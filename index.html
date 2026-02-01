@@ -1,24 +1,17 @@
 <!doctype html>
 <html lang="sk">
 <head>
-    <link rel="preload" as="image" href="/assets/wow-bg.jpg"/>
-<meta name="description" content="Rust Pohoda – slovenský Vanilla Quad Rust server. Monthly wipe každý prvý štvrtok o 20:00. Fair play, bez P2W, aktívna komunita."/>
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/favicon.png">
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#0b0b0b"/>
-  <title>Rust Pohoda • Slovenský Vanilla Quad Rust Server</title>
-  <link rel="stylesheet" href="/assets/style.css"/>
+  <title>Rust Pohoda — Vanilla Quad</title>
+  <link rel="stylesheet" href="/assets/style.css?v=20260201"/>
 </head>
 <body data-page="home">
-  <div class="bg-overlay"></div>
-  <div class="bg-smoke"></div>
-
   <header class="topbar">
-        <link rel="preload" as="image" href="/assets/wow-bg.jpg"/>
-<meta name="description" content="Rust Pohoda – slovenský Vanilla Quad Rust server. Monthly wipe každý prvý štvrtok o 20:00. Fair play, bez P2W, aktívna komunita."/>
-<div class="container topbar-inner">
+    <div class="container topbar-inner">
       <a class="brand" href="/">
         <div class="brand-badge" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -110,6 +103,19 @@
           <a class="btn btn-primary" href="/rules">Prečítať celé pravidlá</a>
         </div>
 
+        <div class="page-title" style="margin-top:22px">
+          <h2>Screenshoty zo servera</h2>
+          <div class="note">Najnovšie momentky</div>
+        </div>
+        <section class="card" style="margin-bottom:12px">
+          <div class="card-inner">
+            <div id="homeShotsGrid" class="gallery-grid"></div>
+            <div class="actions" style="margin-top:12px">
+              <a class="btn btn-ghost" href="/gallery">Otvoriť celú galériu</a>
+            </div>
+          </div>
+        </section>
+
       </div>
     </section>
       <section class="card side-card" id="wipeWidget">
@@ -124,6 +130,13 @@
 
 
     <aside class="side">
+      <div class="card mini" id="bmStatusCard">
+        <div class="card-inner">
+          <h3>Status servera</h3>
+          <p id="bmStatusLine" style="margin:0; color: var(--muted); font-weight:700">Načítavam…</p>
+          <p class="small" id="bmStatusSub" style="margin:8px 0 0"></p>
+        </div>
+      </div>
       <div class="card mini">
         <div class="card-inner">
           <h3>Tip</h3>
@@ -156,85 +169,20 @@
       </div>
     </aside>
   </div>
-
-    <div class="section-head"><h2>Info</h2><p>Rýchle info pre hráčov</p></div>
-    <section class="grid-2 info-sections"><div class="card">
-        <div class="card-inner">
-          <h2 class="h2">Rýchle pravidlá</h2>
-          <ul class="quickrules">
-            <li><span class="num">1</span> Max 4 hráči v tíme (Quad).</li>
-            <li><span class="num">2</span> Max 10 000 hodín spolu za tím.</li>
-            <li><span class="num">3</span> Zákaz cheatov, skriptov, exploitov a bug abuse.</li>
-            <li><span class="num">4</span> Zákaz teamingu medzi tímami (raid/PvP/loot).</li>
-            <li><span class="num">5</span> Žiadne urážky, rasizmus a toxické správanie.</li>
-          </ul>
-          <a class="linkbtn" href="/rules/">Zobraziť celé pravidlá →</a>
-        </div>
-      </div>
-    
-
-<div class="card">
-        <div class="card-inner">
-          <h2 class="h2">Prečo hrať na Rust Pohoda?</h2>
-          <div class="feature-grid">
-            <div class="feature2">
-              <div class="ico">🧡</div>
-              <div>
-                <div class="ft">Férový vanilla zážitok</div>
-                <div class="fd">Bez pay‑to‑win výhod. Hrá rozhodovanie, skill a taktika.</div>
-              </div>
-            </div>
-            <div class="feature2">
-              <div class="ico">🛡️</div>
-              <div>
-                <div class="ft">Aktívna administrácia</div>
-                <div class="fd">Rýchle riešenie reportov, bugov a porušení pravidiel.</div>
-              </div>
-            </div>
-            <div class="feature2">
-              <div class="ico">👥</div>
-              <div>
-                <div class="ft">Silná CZ/SK komunita</div>
-                <div class="fd">Discord, oznámenia, eventy a čistá komunikácia.</div>
-              </div>
-            </div>
-            <div class="feature2">
-              <div class="ico">🕒</div>
-              <div>
-                <div class="ft">Stabilný wipe režim</div>
-                <div class="fd">Každý prvý štvrtok v mesiaci o 20:00 – bez prekvapení.</div>
-              </div>
-            </div>
-          </div>
-
-      </section>
-
-    <div class="section-head"><h2>FAQ</h2><p>Najčastejšie otázky</p></div>
-    <section class="card faq-card">
-      <div class="card-inner">
-        <h2 class="h2">FAQ</h2>
-        <div class="faq">
-          <details>
-            <summary>Kedy je wipe?</summary>
-            <div class="faq-body">Monthly – každý prvý štvrtok v mesiaci o 20:00.</div>
-          </details>
-          <details>
-            <summary>Je server modovaný?</summary>
-            <div class="faq-body">Nie. Je to čistá Vanilla verzia.</div>
-          </details>
-          <details>
-            <summary>Koľko hráčov môže byť v tíme?</summary>
-            <div class="faq-body">Quad – maximálne 4 aktívni členovia.</div>
-          </details>
-          <details>
-            <summary>Ako nahlásim cheatera alebo problém?</summary>
-            <div class="faq-body">Najlepšie cez Discord (s video/screenshot dôkazom).</div>
-          </details>
-        </div>
-      </div>
-    </section>
-
 </main>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="frame" id="lbFrame">
+      <img id="lbImg" alt=""/>
+      <div class="bar">
+        <div>
+          <div style="font-weight:900; color:rgba(255,255,255,.92)" id="lbTitle"></div>
+          <div class="small" id="lbDesc"></div>
+        </div>
+        <button class="btn btn-ghost btn-small" id="lbClose">Zavrieť</button>
+      </div>
+    </div>
+  </div>
 <script>
   // mini wipe reflects chip wipe
   document.addEventListener("DOMContentLoaded", () => {
@@ -265,7 +213,7 @@
       });
     });
   </script>
-  <script src="/assets/app.js"></script>
+  <script src="/assets/app.js?v=20260201"></script>
 
   <div class="modal" id="donateModal" aria-hidden="true">
     <div class="modal-backdrop" id="donateModalBackdrop"></div>
@@ -293,12 +241,6 @@
       </div>
     </div>
   </div>
-
-
-    <div class="sticky-cta" id="stickyCta" aria-label="Rýchle pripojenie">
-      <a class="btn btn-primary" id="btnConnectSticky" href="#">PRIPOJIŤ SA</a>
-      <button class="btn btn-ghost" id="btnCopySticky" type="button">KOPÍROVAŤ IP</button>
-    </div>
 
 </body>
 </html>

@@ -6,7 +6,13 @@
   Cache-Control: public, max-age=300
 
 /assets/*
-  Cache-Control: public, max-age=604800, immutable
+  Cache-Control: public, max-age=300
 
 /gallery/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=3600
+
+/*.html
+  Cache-Control: no-store
+
+/
+  Cache-Control: no-store

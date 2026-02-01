@@ -207,6 +207,75 @@ function startWipeCountdown(){
   setInterval(tick, 1000);
 }
 
+// ---- BattleMetrics: simple status widget (HTTP) ----
+// Uses the public BattleMetrics API so it works on a static site (no UDP query needed).
+async function startBMStatusWidget(serverId){
+  const lineEl = document.getElementById("bmStatusLine");
+  const subEl  = document.getElementById("bmStatusSub");
+  const cardEl = document.getElementById("bmStatusCard");
+  if (!lineEl || !subEl || !cardEl) return;
+
+  const cacheKey = `bm_status_${serverId}`;
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const { t, data } = JSON.parse(cached);
+      if (Date.now() - t < 60_000 && data) {
+        render(data);
+        // still refresh in background but don't block UI
+        refresh(false).catch(() => {});
+        return;
+      }
+    }
+  } catch {}
+
+  await refresh(true);
+
+  async function refresh(blocking){
+    if (blocking) {
+      lineEl.textContent = "Načítavam…";
+      subEl.textContent = "";
+    }
+
+    const url = `https://api.battlemetrics.com/servers/${encodeURIComponent(String(serverId))}`;
+    const res = await fetch(url, { headers: { "Accept": "application/json" } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const a = json?.data?.attributes;
+    if (!a) throw new Error("No attributes");
+
+    const data = {
+      name: a.name || "Rust server",
+      status: a.status || "unknown",
+      players: a.players,
+      maxPlayers: a.maxPlayers,
+      map: a.details?.map || a.details?.rust?.map || a.details?.mapName || "",
+      country: a.country || "",
+      ip: a.ip || "",
+      port: a.port || "",
+      updatedAt: a.updatedAt || ""
+    };
+
+    try { localStorage.setItem(cacheKey, JSON.stringify({ t: Date.now(), data })); } catch {}
+    render(data);
+  }
+
+  function render(d){
+    const online = String(d.status).toLowerCase() === "online";
+    const dot = online ? "🟢" : "🔴";
+    const playersText = (typeof d.players === "number" && typeof d.maxPlayers === "number")
+      ? `${d.players}/${d.maxPlayers}`
+      : (d.players ?? "?") + "/" + (d.maxPlayers ?? "?");
+
+    lineEl.innerHTML = `${dot} <strong>${escapeHtml(d.name)}</strong><br>Hráči: <strong>${escapeHtml(playersText)}</strong>`;
+
+    const bits = [];
+    if (d.map) bits.push(`Mapa: ${d.map}`);
+    if (d.ip && d.port) bits.push(`IP: ${d.ip}:${d.port}`);
+    subEl.textContent = bits.join(" • ");
+  }
+}
+
 async function initCommon(config) {
   setActiveNav();
 
@@ -254,21 +323,6 @@ async function initHome(config) {
     joinTopBtn.addEventListener("click", (e) => { e.preventDefault(); location.href = CONNECT_LINK; setTimeout(()=>showConnectHelp(CONNECT_IPPORT || '203.16.163.84:24789'), 1200); });
     joinTopBtn.setAttribute("href", CONNECT_LINK);
   }
-
-  // Sticky CTA (uses same connectLink + serverIP as main buttons)
-  const stickyConnectBtn = document.getElementById("btnConnectSticky");
-  const stickyCopyBtn = document.getElementById("btnCopySticky");
-  if (stickyConnectBtn){
-    stickyConnectBtn.classList.add("btn-glow");
-    stickyConnectBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      location.href = config.connectLink;
-    });
-  }
-  if (stickyCopyBtn){
-    stickyCopyBtn.addEventListener("click", () => copyText(ip));
-  }
-
   if (discordBtn) {
     discordBtn.setAttribute("href", config.discord);
     discordBtn.setAttribute("target","_blank");
@@ -286,23 +340,70 @@ async function initHome(config) {
 
 async function initGallery() {
   const grid = $("#galleryGrid");
+  if (!grid) return;
+  await renderGalleryFromManifest(grid, { emptyMessage: "Zatiaľ tu nie sú žiadne obrázky." });
+}
+
+/**
+ * Render gallery thumbs into a given grid from /gallery/manifest.json.
+ * Can be reused on Home as a "latest screenshots" preview.
+ */
+async function renderGalleryFromManifest(gridEl, opts={}){
+  const {
+    limit = 0,
+    emptyMessage = "Zatiaľ tu nie sú žiadne obrázky.",
+    notFoundMessage = "Galéria sa nenašla.",
+  } = opts;
+
   const box = $("#lightbox");
-  if (!grid || !box) return;
+  const closeBtn = $("#lbClose");
+  const imgEl = $("#lbImg");
+  const titleEl = $("#lbTitle");
+  const descEl = $("#lbDesc");
+
+  const canLightbox = Boolean(box && closeBtn && imgEl && titleEl && descEl);
 
   const res = await fetch("/gallery/manifest.json", { cache: "no-store" });
   if (!res.ok) {
-    grid.innerHTML = "<p class='small'>Galéria sa nenašla.</p>";
+    gridEl.innerHTML = `<p class='small'>${escapeHtml(notFoundMessage)}</p>`;
     return;
   }
+
   const data = await res.json();
-  const images = Array.isArray(data.images) ? data.images : [];
+  const imagesRaw = Array.isArray(data.images) ? data.images : [];
+  const images = (limit > 0) ? imagesRaw.slice(0, limit) : imagesRaw;
+
   if (!images.length) {
-    grid.innerHTML = "<p class='small'>Zatiaľ tu nie sú žiadne obrázky.</p>";
+    gridEl.innerHTML = `<p class='small'>${escapeHtml(emptyMessage)}</p>`;
     return;
+  }
+
+  // Clear existing
+  gridEl.innerHTML = "";
+
+  function openLightbox(src, title, desc){
+    if (!canLightbox) return;
+    imgEl.src = src;
+    titleEl.textContent = title;
+    descEl.textContent = desc;
+    box.classList.add("open");
+  }
+  function close(){
+    if (!canLightbox) return;
+    box.classList.remove("open");
+    imgEl.src = "";
+  }
+
+  if (canLightbox && !box.dataset.bound){
+    closeBtn.addEventListener("click", close);
+    box.addEventListener("click", (e) => { if (e.target === box) close(); });
+    document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") close(); });
+    box.dataset.bound = "1";
   }
 
   images.forEach((img) => {
     const file = img.file;
+    if (!file) return;
     const title = img.title || file;
     const desc = img.desc || "";
     const src = "/gallery/" + file;
@@ -316,29 +417,16 @@ async function initGallery() {
         <div class="d">${escapeHtml(desc)}</div>
       </div>
     `;
-    card.addEventListener("click", () => openLightbox(src, title, desc));
-    grid.appendChild(card);
+
+    if (canLightbox) {
+      card.addEventListener("click", () => openLightbox(src, title, desc));
+    } else {
+      // Fallback: go to gallery
+      card.addEventListener("click", () => { location.href = "/gallery"; });
+    }
+
+    gridEl.appendChild(card);
   });
-
-  const closeBtn = $("#lbClose");
-  const imgEl = $("#lbImg");
-  const titleEl = $("#lbTitle");
-  const descEl = $("#lbDesc");
-
-  function openLightbox(src, title, desc){
-    imgEl.src = src;
-    titleEl.textContent = title;
-    descEl.textContent = desc;
-    box.classList.add("open");
-  }
-  function close(){
-    box.classList.remove("open");
-    imgEl.src = "";
-  }
-
-  closeBtn?.addEventListener("click", close);
-  box.addEventListener("click", (e) => { if (e.target === box) close(); });
-  document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") close(); });
 }
 
 
@@ -353,7 +441,21 @@ async function initGallery() {
   if (page === "home") {
     await initHome(config);
     await renderMarkdownInto("#mdHome", mdPathFor("home"));
+    const homeGrid = document.getElementById("homeShotsGrid");
+    if (homeGrid) {
+      await renderGalleryFromManifest(homeGrid, {
+        limit: 6,
+        emptyMessage: "Zatiaľ tu nie sú žiadne screenshoty. Pridáme ich čoskoro 🙂",
+      });
+    }
     startWipeCountdown();
+    // BattleMetrics status widget (server id: 37458252)
+    startBMStatusWidget(37458252).catch(() => {
+      const lineEl = document.getElementById("bmStatusLine");
+      const subEl  = document.getElementById("bmStatusSub");
+      if (lineEl) lineEl.textContent = "Nepodarilo sa načítať status.";
+      if (subEl) subEl.textContent = "Skús neskôr.";
+    });
     
   }
   if (page === "rules") {
@@ -368,6 +470,37 @@ async function initGallery() {
   }
 })();
 
-});
 
+// === BIND_ALL_IDS_FIX ===
+// Bind click handlers to ALL matches (guards against duplicate IDs from cached HTML).
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    const bindAll = (selector, fn) => {
+      document.querySelectorAll(selector).forEach(el => el.addEventListener("click", fn));
+    };
+
+    bindAll("#btnCopyIP", (e) => {
+      e.preventDefault();
+      const ipEl = document.getElementById("ipInline");
+      const ip = ipEl ? ipEl.textContent.trim() : "";
+      if (ip) copyText(ip);
+    });
+
+    bindAll("#btnJoinTop", (e) => {
+      const href = e.currentTarget.getAttribute("href") || "";
+      if (href.trim() === "#" || href.trim() === "") {
+        e.preventDefault();
+        loadConfig().then(cfg => { if (cfg?.connectLink) location.href = cfg.connectLink; });
+      }
+      // otherwise let the steam:// link open normally
+    });
+
+    bindAll("#btnConnect", (e) => {
+      const href = e.currentTarget.getAttribute("href") || "";
+      if (href.trim() === "#" || href.trim() === "") {
+        e.preventDefault();
+        loadConfig().then(cfg => { if (cfg?.connectLink) location.href = cfg.connectLink; });
+      }
+    });
+  } catch {}
 });
