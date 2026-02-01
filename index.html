@@ -103,6 +103,19 @@
           <a class="btn btn-primary" href="/rules">Prečítať celé pravidlá</a>
         </div>
 
+        <div class="page-title" style="margin-top:22px">
+          <h2>Screenshoty zo servera</h2>
+          <div class="note">Najnovšie momentky</div>
+        </div>
+        <section class="card" style="margin-bottom:12px">
+          <div class="card-inner">
+            <div id="homeShotsGrid" class="gallery-grid"></div>
+            <div class="actions" style="margin-top:12px">
+              <a class="btn btn-ghost" href="/gallery">Otvoriť celú galériu</a>
+            </div>
+          </div>
+        </section>
+
       </div>
     </section>
       <section class="card side-card" id="wipeWidget">
@@ -113,18 +126,20 @@
         </div>
       </section>
 
-      <section class="card mini" id="bmStatusCard">
+      <div class="card mini" id="bmStatusCard">
         <div class="card-inner">
           <h3>Status servera</h3>
-          <p id="bmStatusLine">Načítavam…</p>
-          <p class="small" id="bmStatusSub"></p>
+          <p id="bmStatusLine" style="margin:0; color: var(--muted); font-weight:700">Načítavam…</p>
+          <p class="small" id="bmStatusSub" style="margin:8px 0 0"></p>
         </div>
-      </section>
+
 
 
 
 
     <aside class="side">
+      
+      </div>
       <div class="card mini">
         <div class="card-inner">
           <h3>Tip</h3>
@@ -158,6 +173,19 @@
     </aside>
   </div>
 </main>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="frame" id="lbFrame">
+      <img id="lbImg" alt=""/>
+      <div class="bar">
+        <div>
+          <div style="font-weight:900; color:rgba(255,255,255,.92)" id="lbTitle"></div>
+          <div class="small" id="lbDesc"></div>
+        </div>
+        <button class="btn btn-ghost btn-small" id="lbClose">Zavrieť</button>
+      </div>
+    </div>
+  </div>
 <script>
   // mini wipe reflects chip wipe
   document.addEventListener("DOMContentLoaded", () => {
