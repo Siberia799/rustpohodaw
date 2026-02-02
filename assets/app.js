@@ -183,6 +183,111 @@ function initLang(){
 }
 
 
+function applyStaticI18n(lang){
+  const dict = {
+    sk: {
+      nav_home: "Domov",
+      nav_rules: "Pravidlá",
+      nav_vip: "VIP",
+      nav_gallery: "Galéria",
+      join_top: "PRIPOJIŤ SA",
+      promo_rules: "Pravidlá",
+      kicker: "SLOVENSKÝ VANILLA SERVER",
+      copy_ip: "COPY IP",
+      connect: "CONNECT",
+      discord: "DISCORD",
+      support: "💛 PODPORA",
+      chip_wipe: "Wipe:",
+      chip_mode: "Mode:",
+      chip_team: "Team limit:",
+      chip_online: "Online:",
+      loading: "Načítavam…",
+      load_fail: "Nepodarilo sa načítať obsah.",
+      status_fail: "Nepodarilo sa načítať status."
+    },
+    cz: {
+      nav_home: "Domů",
+      nav_rules: "Pravidla",
+      nav_vip: "VIP",
+      nav_gallery: "Galerie",
+      join_top: "PŘIPOJIT SE",
+      promo_rules: "Pravidla",
+      kicker: "ČESKÝ VANILLA SERVER",
+      copy_ip: "KOPÍROVAT IP",
+      connect: "PŘIPOJIT",
+      discord: "DISCORD",
+      support: "💛 PODPORA",
+      chip_wipe: "Wipe:",
+      chip_mode: "Režim:",
+      chip_team: "Limit týmu:",
+      chip_online: "Online:",
+      loading: "Načítám…",
+      load_fail: "Nepodařilo se načíst obsah.",
+      status_fail: "Nepodařilo se načíst status."
+    }
+  };
+
+  const t = dict[lang] || dict.sk;
+
+  // Top nav
+  const nav = document.getElementById("navMenu");
+  if (nav){
+    const links = nav.querySelectorAll("a");
+    links.forEach(a => {
+      const href = a.getAttribute("href") || "";
+      if (href === "/") a.textContent = t.nav_home;
+      else if (href === "/rules") a.textContent = t.nav_rules;
+      else if (href === "/vip") a.textContent = t.nav_vip;
+      else if (href === "/gallery") a.textContent = t.nav_gallery;
+    });
+  }
+
+  // Header join
+  const jt = document.getElementById("btnJoinTop");
+  if (jt) jt.textContent = t.join_top;
+
+  // Promo link
+  const pl = document.getElementById("promoLink");
+  if (pl) pl.textContent = t.promo_rules;
+
+  // Landing hero elements (only on home)
+  const kicker = document.querySelector(".kicker");
+  if (kicker) kicker.textContent = t.kicker;
+
+  const btnCopy = document.getElementById("btnCopyIP");
+  if (btnCopy){
+    // keep IP inline span
+    const span = btnCopy.querySelector("#ipInline");
+    btnCopy.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = ""; });
+    btnCopy.prepend(document.createTextNode(t.copy_ip + " "));
+    if (span) btnCopy.appendChild(span);
+  }
+
+  const btnConn = document.getElementById("btnConnect");
+  if (btnConn) btnConn.textContent = t.connect;
+
+  const d = document.getElementById("discordLink");
+  if (d) d.textContent = t.discord;
+
+  const sup = document.getElementById("donateLink");
+  if (sup) sup.textContent = t.support;
+
+  // Chips labels
+  const chipEls = document.querySelectorAll(".chips .chip");
+  chipEls.forEach(chip => {
+    const txt = chip.textContent.trim();
+    if (txt.startsWith("Wipe:")) chip.childNodes[0].textContent = t.chip_wipe + " ";
+    if (txt.startsWith("Mode:")) chip.childNodes[0].textContent = t.chip_mode + " ";
+    if (txt.startsWith("Team limit:")) chip.childNodes[0].textContent = t.chip_team + " ";
+    if (txt.startsWith("Online:")) chip.childNodes[0].textContent = t.chip_online + " ";
+  });
+
+  // Document title (optional)
+  if (lang === "cz") document.title = "Rust Pohoda — Vanilla Quad (CZ)";
+  else document.title = "Rust Pohoda — Vanilla Quad";
+}
+
+
 async function loadConfig(){
   try{
     const res = await fetch("/config.json", { cache: "no-store" });
