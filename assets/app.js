@@ -183,6 +183,12 @@ function initLang(){
 }
 
 
+function getLangLabels(){
+  const lang = (typeof CURRENT_LANG !== "undefined") ? CURRENT_LANG : "sk";
+  if (lang === "cz") return { players: "Hráči", map: "Mapa" };
+  return { players: "Hráči", map: "Mapa" };
+}
+
 function applyStaticI18n(lang){
   const dict = {
     sk: {
@@ -292,25 +298,33 @@ function applyStaticI18n(lang){
   });
 
   // Dynamic cards on landing
-  const wipeCardTitle = document.querySelector("#wipeCountdown h3");
+  const wipeCardTitle = document.querySelector("#wipeCountdownTitle");
   if (wipeCardTitle) wipeCardTitle.textContent = t.wipe_countdown_title;
 
-  const wipeNext = document.getElementById("nextWipeLabel");
-  if (wipeNext) wipeNext.textContent = t.wipe_next;
+  const wipeTarget = document.getElementById("wipeTargetText");
+  if (wipeTarget) wipeTarget.textContent = t.wipe_next + " " + (wipeTarget.textContent.split(":").slice(1).join(":").trim() || "—");
 
-  const statusTitle = document.querySelector("#serverStatus h3");
-  if (statusTitle) statusTitle.textContent = t.status_title;
+  const statusH3 = document.querySelector("#bmStatusCard h3");
+  if (statusH3) statusH3.textContent = t.status_title;
 
-  const tipTitle = document.querySelector("#tipCard h3");
-  if (tipTitle) tipTitle.textContent = t.tip_title;
+  // Tip card: it's the first .card.mini after bmStatusCard
+  const bmCard = document.getElementById("bmStatusCard");
+  if (bmCard) {
+    const tipCard = bmCard.nextElementSibling;
+    if (tipCard) {
+      const h3 = tipCard.querySelector("h3");
+      const p = tipCard.querySelector("p");
+      if (h3) h3.textContent = t.tip_title;
+      if (p) p.textContent = t.tip_text;
+    }
+    const wipeCard = bmCard.nextElementSibling ? bmCard.nextElementSibling.nextElementSibling : null;
+    if (wipeCard) {
+      const h3 = wipeCard.querySelector("h3");
+      if (h3) h3.textContent = t.wipe_title;
+    }
+  }
 
-  const tipText = document.querySelector("#tipCard p");
-  if (tipText) tipText.textContent = t.tip_text;
-
-  const wipeTitle = document.querySelector("#wipeInfo h3");
-  if (wipeTitle) wipeTitle.textContent = t.wipe_title;
-
-  const wipeDesc = document.querySelector("#wipeInfo p");
+  const wipeDesc = document.getElementById("miniWipe");
   if (wipeDesc) wipeDesc.textContent = t.wipe_desc;
 }
 
@@ -623,10 +637,12 @@ async function startBMStatusWidget(serverId){
       ? `${d.players}/${d.maxPlayers}`
       : (d.players ?? "?") + "/" + (d.maxPlayers ?? "?");
 
-    lineEl.innerHTML = `${dot} <strong>${escapeHtml(d.name)}</strong><br>Hráči: <strong>${escapeHtml(playersText)}</strong>`;
+    const t = getLangLabels();
+
+    lineEl.innerHTML = `${dot} <strong>${escapeHtml(d.name)}</strong><br>${t.players}: <strong>${escapeHtml(playersText)}</strong>`;
 
     const bits = [];
-    if (d.map) bits.push(`Mapa: ${d.map}`);
+    if (d.map) bits.push(`${t.map}: ${d.map}`);
     if (d.ip && d.port) bits.push(`IP: ${d.ip}:${d.port}`);
     subEl.textContent = bits.join(" • ");
   }
