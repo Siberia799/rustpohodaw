@@ -65,12 +65,33 @@ function mdToHtml(md="") {
   function inline(s) {
     const raw = String(s);
     const tokenLinks = [];
-    let out = raw.replace(/\*\*([^*]+)\*\*/g, (_, t) => `@@BOLD_${tokenLinks.push(t)-1}@@`);
-    out = out.replace(/(https?:\/\/[^\s)]+)/g, (url) => `@@LINK_${tokenLinks.push(url)-1}@@`);
+    // Support:
+    //  - **bold**
+    //  - bare URLs
+    //  - markdown links: [text](https://...)
+    let out = raw
+      .replace(/\*\*([^*]+)\*\*/g, (_, t) => `@@BOLD_${tokenLinks.push({ t, u: null, kind: "bold" })-1}@@`)
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_, text, url) => {
+        return `@@MLINK_${tokenLinks.push({ t: text, u: url, kind: "mlink" })-1}@@`;
+      })
+      .replace(/(https?:\/\/[^\s)]+)/g, (url) => `@@LINK_${tokenLinks.push({ t: url, u: url, kind: "url" })-1}@@`);
     out = escapeHtml(out);
-    out = out.replace(/@@BOLD_(\d+)@@/g, (_, i) => `<strong>${escapeHtml(tokenLinks[Number(i)] || "")}</strong>`);
+    out = out.replace(/@@BOLD_(\d+)@@/g, (_, i) => {
+      const tok = tokenLinks[Number(i)];
+      const txt = tok && tok.kind === "bold" ? tok.t : "";
+      return `<strong>${escapeHtml(txt || "")}</strong>`;
+    });
+    out = out.replace(/@@MLINK_(\d+)@@/g, (_, i) => {
+      const tok = tokenLinks[Number(i)];
+      const text = tok?.t || "";
+      const url = tok?.u || "";
+      const isVipBuy = /k[uú]pi[ťt]\s+vip/i.test(text);
+      const cls = isVipBuy ? "btn btn-primary" : "";
+      return `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer"${cls ? ` class=\"${cls}\"` : ""}>${escapeHtml(text)}</a>`;
+    });
     out = out.replace(/@@LINK_(\d+)@@/g, (_, i) => {
-      const url = tokenLinks[Number(i)] || "";
+      const tok = tokenLinks[Number(i)];
+      const url = tok?.u || tok?.t || "";
       return `<a href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(url)}</a>`;
     });
     return out;
