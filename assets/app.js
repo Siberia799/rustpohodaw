@@ -17,6 +17,80 @@ const DEFAULT_CONFIG = {
   donateComingSoon: true
 };
 
+
+let APP_CONFIG = null;
+
+const I18N = {
+  sk: {
+    nav_home: "Domov",
+    nav_rules: "Pravidlá",
+    nav_vip: "VIP",
+    nav_gallery: "Galéria",
+    nav_discord: "Discord",
+    join: "PRIPOJIŤ SA",
+    hero_kicker: "SLOVENSKÝ VANILLA SERVER",
+    home_card_title: "Obsah stránky",
+    copy_ip: "COPY IP",
+    copied: "Skopírované!",
+    md_load_fail: "Nepodarilo sa načítať obsah.",
+    gallery_empty_home: "Zatiaľ tu nie sú žiadne screenshoty. Pridáme ich čoskoro 🙂",
+    bm_fail_line: "Nepodarilo sa načítať status.",
+    bm_fail_sub: "Skús neskôr.",
+  },
+  cz: {
+    nav_home: "Domů",
+    nav_rules: "Pravidla",
+    nav_vip: "VIP",
+    nav_gallery: "Galerie",
+    nav_discord: "Discord",
+    join: "PŘIPOJIT SE",
+    hero_kicker: "ČESKOSLOVENSKÝ VANILLA SERVER",
+    home_card_title: "Obsah stránky",
+    copy_ip: "KOPÍROVAT IP",
+    copied: "Zkopírováno!",
+    md_load_fail: "Nepodařilo se načíst obsah.",
+    gallery_empty_home: "Zatím tu nejsou žádné screenshoty. Brzy je přidáme 🙂",
+    bm_fail_line: "Nepodařilo se načíst status.",
+    bm_fail_sub: "Zkus později.",
+  }
+};
+
+function t(key){
+  return (I18N[CURRENT_LANG] && I18N[CURRENT_LANG][key]) || I18N.sk[key] || key;
+}
+
+function applyI18n(){
+  // Nav labels
+  const nav = document.getElementById("navMenu");
+  if (nav) {
+    nav.querySelectorAll("a").forEach(a => {
+      const href = a.getAttribute("href") || "";
+      if (href === "/") a.textContent = t("nav_home");
+      else if (href === "/rules") a.textContent = t("nav_rules");
+      else if (href === "/vip") a.textContent = t("nav_vip");
+      else if (href === "/gallery") a.textContent = t("nav_gallery");
+    });
+  }
+  const discordNav = document.getElementById("discordNav");
+  if (discordNav) discordNav.textContent = t("nav_discord");
+
+  const joinTop = document.getElementById("btnJoinTop");
+  if (joinTop) joinTop.textContent = t("join");
+
+  const kicker = document.querySelector(".hero .kicker");
+  if (kicker) kicker.textContent = t("hero_kicker");
+
+  const homeCardTitle = document.getElementById("homeCardTitle");
+  if (homeCardTitle) homeCardTitle.textContent = t("home_card_title");
+
+  const copyBtn = document.getElementById("btnCopyIP");
+  if (copyBtn) {
+    // Preserve IP span
+    const ipSpan = document.getElementById("ipInline");
+    copyBtn.innerHTML = `${t("copy_ip")} ${ipSpan ? ipSpan.outerHTML : ""}`;
+  }
+}
+
 const $ = (sel, root=document) => root.querySelector(sel);
 
 
@@ -95,6 +169,7 @@ function setLang(lang){
   document.documentElement.setAttribute("lang", next);
   ensureLangSwitcher();
   updateLangSwitcherUI(next);
+  applyI18n();
 
   const page = document.body.getAttribute("data-page");
   renderPageMarkdown(page).catch(()=>{});
@@ -104,6 +179,7 @@ function initLang(){
   document.documentElement.setAttribute("lang", CURRENT_LANG);
   ensureLangSwitcher();
   updateLangSwitcherUI(CURRENT_LANG);
+  applyI18n();
 }
 
 
@@ -192,9 +268,48 @@ async function renderMarkdownInto(targetSel, mdPath) {
   const el = $(targetSel);
   if (!el) return;
   const res = await fetch(mdPath, { cache: "no-store" });
-  if (!res.ok) { el.innerHTML = "<p>Nepodarilo sa načítať obsah.</p>"; return; }
+  if (!res.ok) { el.innerHTML = `<p>${t("md_load_fail")}</p>`; return; }
   const md = await res.text();
   el.innerHTML = mdToHtml(md);
+}
+
+
+async function renderPageMarkdown(page){
+  const config = APP_CONFIG || DEFAULT_CONFIG;
+  // Re-apply static UI translations first
+  applyI18n();
+
+  if (page === "home") {
+    await initHome(config);
+    await renderMarkdownInto("#mdHome", mdPathFor("home"));
+    const homeGrid = document.getElementById("homeShotsGrid");
+    if (homeGrid) {
+      await renderGalleryFromManifest(homeGrid, {
+        limit: 6,
+        emptyMessage: t("gallery_empty_home"),
+      });
+    }
+    startWipeCountdown();
+    startBMStatusWidget(37458252).catch(() => {
+      const lineEl = document.getElementById("bmStatusLine");
+      const subEl  = document.getElementById("bmStatusSub");
+      if (lineEl) lineEl.textContent = t("bm_fail_line");
+      if (subEl) subEl.textContent = t("bm_fail_sub");
+    });
+  }
+
+  if (page === "rules") {
+    await renderMarkdownInto("#mdRules", mdPathFor("rules"));
+  }
+
+  if (page === "vip") {
+    await renderMarkdownInto("#mdVip", mdPathFor("vip"));
+  }
+
+  if (page === "gallery") {
+    await renderMarkdownInto("#mdGallery", mdPathFor("gallery"));
+    await initGallery();
+  }
 }
 
 function setActiveNav() {
@@ -544,40 +659,12 @@ async function renderGalleryFromManifest(gridEl, opts={}){
 (async function main(){
   document.body.classList.add('wipe-pre');
   const config = await loadConfig();
+  APP_CONFIG = config;
   await initCommon(config);
   initLang();
 
   const page = document.body.getAttribute("data-page");
-  if (page === "home") {
-    await initHome(config);
-    await renderMarkdownInto("#mdHome", mdPathFor("home"));
-    const homeGrid = document.getElementById("homeShotsGrid");
-    if (homeGrid) {
-      await renderGalleryFromManifest(homeGrid, {
-        limit: 6,
-        emptyMessage: "Zatiaľ tu nie sú žiadne screenshoty. Pridáme ich čoskoro 🙂",
-      });
-    }
-    startWipeCountdown();
-    // BattleMetrics status widget (server id: 37458252)
-    startBMStatusWidget(37458252).catch(() => {
-      const lineEl = document.getElementById("bmStatusLine");
-      const subEl  = document.getElementById("bmStatusSub");
-      if (lineEl) lineEl.textContent = "Nepodarilo sa načítať status.";
-      if (subEl) subEl.textContent = "Skús neskôr.";
-    });
-    
-  }
-  if (page === "rules") {
-    await renderMarkdownInto("#mdRules", mdPathFor("rules"));
-  }
-  if (page === "vip") {
-    await renderMarkdownInto("#mdVip", mdPathFor("vip"));
-  }
-  if (page === "gallery") {
-    await renderMarkdownInto("#mdGallery", mdPathFor("gallery"));
-    await initGallery();
-  }
+  renderPageMarkdown(page).catch(()=>{});
 })();
 
 
