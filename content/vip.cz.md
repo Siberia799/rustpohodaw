@@ -1,5 +1,16 @@
 # VIP & Sponzor
 
+<a class="btn btn-primary" href="https://czsk-rust-pohoda.tebex.io" target="_blank" rel="noopener noreferrer">Přejít do Tebex obchodu</a>
+
+## Jak koupit VIP
+
+1. **Přihlas se přes Steam** na https://czsk-rust-pohoda.tebex.io
+2. **Vyber balíček**, který chceš koupit.
+3. Přejdi na **Checkout** a dokonči platbu.
+4. Po zaplacení bude během **několika hodin** přiřazena VIP role ke **Steam účtu, přes který jsi byl přihlášený** (podle **Steam ID**).
+
+ℹ️ VIP balíček se vždy váže na Steam účet, kterým jsi přihlášený během nákupu.
+
 Server je **vanilla** a držíme se zásady **No Pay-to-Win**. Podpora serveru je hlavně o komfortu a komunitě.
 
 ## ⭐ VIP
