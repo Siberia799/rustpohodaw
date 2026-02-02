@@ -38,6 +38,16 @@ const I18N = {
     bm_fail_sub: "Skús neskôr.",
   },
   cz: {
+      wipe_countdown_title: "Odpočet wipe",
+      wipe_next: "Nejbližší wipe:",
+      status_title: "Stav serveru",
+      players: "Hráči",
+      map: "Mapa",
+      tip_title: "Tip",
+      tip_text: "Pokud máš problém nebo report, piš přes Discord – ideálně s videem nebo screenshotem.",
+      wipe_title: "Wipe",
+      wipe_desc: "Monthly – každý první čtvrtek v měsíci ve 20:00",
+
     nav_home: "Domů",
     nav_rules: "Pravidla",
     nav_vip: "VIP",
@@ -186,6 +196,17 @@ function initLang(){
 function applyStaticI18n(lang){
   const dict = {
     sk: {
+      wipe_countdown_title: "Wipe odpočet",
+      wipe_next: "Najbližší wipe:",
+      status_title: "Status servera",
+      players: "Hráči",
+      map: "Mapa",
+      tip_title: "Tip",
+      tip_text: "Ak máš problém alebo report, píš cez Discord – ideálne s videom alebo screenshotom.",
+      wipe_title: "Wipe",
+      wipe_desc: "Monthly – každý prvý štvrtok v mesiaci o 20:00",
+
+    sk: {
       nav_home: "Domov",
       nav_rules: "Pravidlá",
       nav_vip: "VIP",
@@ -206,6 +227,16 @@ function applyStaticI18n(lang){
       status_fail: "Nepodarilo sa načítať status."
     },
     cz: {
+      wipe_countdown_title: "Odpočet wipe",
+      wipe_next: "Nejbližší wipe:",
+      status_title: "Stav serveru",
+      players: "Hráči",
+      map: "Mapa",
+      tip_title: "Tip",
+      tip_text: "Pokud máš problém nebo report, piš přes Discord – ideálně s videem nebo screenshotem.",
+      wipe_title: "Wipe",
+      wipe_desc: "Monthly – každý první čtvrtek v měsíci ve 20:00",
+
       nav_home: "Domů",
       nav_rules: "Pravidla",
       nav_vip: "VIP",
@@ -285,6 +316,30 @@ function applyStaticI18n(lang){
   // Document title (optional)
   if (lang === "cz") document.title = "Rust Pohoda — Vanilla Quad (CZ)";
   else document.title = "Rust Pohoda — Vanilla Quad";
+  // Dynamic cards translation
+  const t = dict[lang] || dict.sk;
+
+  const wipeCardTitle = document.querySelector("#wipeCountdown h3");
+  if (wipeCardTitle) wipeCardTitle.textContent = t.wipe_countdown_title;
+
+  const wipeNext = document.getElementById("nextWipeLabel");
+  if (wipeNext) wipeNext.textContent = t.wipe_next;
+
+  const statusTitle = document.querySelector("#serverStatus h3");
+  if (statusTitle) statusTitle.textContent = t.status_title;
+
+  const tipTitle = document.querySelector("#tipCard h3");
+  if (tipTitle) tipTitle.textContent = t.tip_title;
+
+  const tipText = document.querySelector("#tipCard p");
+  if (tipText) tipText.textContent = t.tip_text;
+
+  const wipeTitle = document.querySelector("#wipeInfo h3");
+  if (wipeTitle) wipeTitle.textContent = t.wipe_title;
+
+  const wipeDesc = document.querySelector("#wipeInfo p");
+  if (wipeDesc) wipeDesc.textContent = t.wipe_desc;
+
 }
 
 
