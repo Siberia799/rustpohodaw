@@ -38,16 +38,6 @@ const I18N = {
     bm_fail_sub: "Skús neskôr.",
   },
   cz: {
-      wipe_countdown_title: "Odpočet wipe",
-      wipe_next: "Nejbližší wipe:",
-      status_title: "Stav serveru",
-      players: "Hráči",
-      map: "Mapa",
-      tip_title: "Tip",
-      tip_text: "Pokud máš problém nebo report, piš přes Discord – ideálně s videem nebo screenshotem.",
-      wipe_title: "Wipe",
-      wipe_desc: "Monthly – každý první čtvrtek v měsíci ve 20:00",
-
     nav_home: "Domů",
     nav_rules: "Pravidla",
     nav_vip: "VIP",
@@ -179,7 +169,7 @@ function setLang(lang){
   document.documentElement.setAttribute("lang", next);
   ensureLangSwitcher();
   updateLangSwitcherUI(next);
-  applyI18n();
+  applyStaticI18n(next);
 
   const page = document.body.getAttribute("data-page");
   renderPageMarkdown(page).catch(()=>{});
@@ -189,23 +179,12 @@ function initLang(){
   document.documentElement.setAttribute("lang", CURRENT_LANG);
   ensureLangSwitcher();
   updateLangSwitcherUI(CURRENT_LANG);
-  applyI18n();
+  applyStaticI18n(CURRENT_LANG);
 }
 
 
 function applyStaticI18n(lang){
   const dict = {
-    sk: {
-      wipe_countdown_title: "Wipe odpočet",
-      wipe_next: "Najbližší wipe:",
-      status_title: "Status servera",
-      players: "Hráči",
-      map: "Mapa",
-      tip_title: "Tip",
-      tip_text: "Ak máš problém alebo report, píš cez Discord – ideálne s videom alebo screenshotom.",
-      wipe_title: "Wipe",
-      wipe_desc: "Monthly – každý prvý štvrtok v mesiaci o 20:00",
-
     sk: {
       nav_home: "Domov",
       nav_rules: "Pravidlá",
@@ -222,21 +201,15 @@ function applyStaticI18n(lang){
       chip_mode: "Mode:",
       chip_team: "Team limit:",
       chip_online: "Online:",
-      loading: "Načítavam…",
-      load_fail: "Nepodarilo sa načítať obsah.",
-      status_fail: "Nepodarilo sa načítať status."
+      wipe_countdown_title: "Wipe odpočet",
+      wipe_next: "Najbližší wipe:",
+      status_title: "Status servera",
+      tip_title: "Tip",
+      tip_text: "Ak máš problém alebo report, píš cez Discord – ideálne s videom alebo screenshotom.",
+      wipe_title: "Wipe",
+      wipe_desc: "Monthly – každý prvý štvrtok v mesiaci o 20:00"
     },
     cz: {
-      wipe_countdown_title: "Odpočet wipe",
-      wipe_next: "Nejbližší wipe:",
-      status_title: "Stav serveru",
-      players: "Hráči",
-      map: "Mapa",
-      tip_title: "Tip",
-      tip_text: "Pokud máš problém nebo report, piš přes Discord – ideálně s videem nebo screenshotem.",
-      wipe_title: "Wipe",
-      wipe_desc: "Monthly – každý první čtvrtek v měsíci ve 20:00",
-
       nav_home: "Domů",
       nav_rules: "Pravidla",
       nav_vip: "VIP",
@@ -252,15 +225,19 @@ function applyStaticI18n(lang){
       chip_mode: "Režim:",
       chip_team: "Limit týmu:",
       chip_online: "Online:",
-      loading: "Načítám…",
-      load_fail: "Nepodařilo se načíst obsah.",
-      status_fail: "Nepodařilo se načíst status."
+      wipe_countdown_title: "Odpočet wipe",
+      wipe_next: "Nejbližší wipe:",
+      status_title: "Stav serveru",
+      tip_title: "Tip",
+      tip_text: "Pokud máš problém nebo report, piš přes Discord – ideálně s videem nebo screenshotem.",
+      wipe_title: "Wipe",
+      wipe_desc: "Monthly – každý první čtvrtek v měsíci ve 20:00"
     }
   };
 
   const t = dict[lang] || dict.sk;
 
-  // Top nav
+  // Top nav labels
   const nav = document.getElementById("navMenu");
   if (nav){
     const links = nav.querySelectorAll("a");
@@ -273,7 +250,7 @@ function applyStaticI18n(lang){
     });
   }
 
-  // Header join
+  // Header join button
   const jt = document.getElementById("btnJoinTop");
   if (jt) jt.textContent = t.join_top;
 
@@ -281,16 +258,15 @@ function applyStaticI18n(lang){
   const pl = document.getElementById("promoLink");
   if (pl) pl.textContent = t.promo_rules;
 
-  // Landing hero elements (only on home)
+  // Landing hero elements
   const kicker = document.querySelector(".kicker");
   if (kicker) kicker.textContent = t.kicker;
 
   const btnCopy = document.getElementById("btnCopyIP");
   if (btnCopy){
-    // keep IP inline span
     const span = btnCopy.querySelector("#ipInline");
-    btnCopy.childNodes.forEach(n => { if (n.nodeType === 3) n.textContent = ""; });
-    btnCopy.prepend(document.createTextNode(t.copy_ip + " "));
+    btnCopy.innerHTML = "";
+    btnCopy.appendChild(document.createTextNode(t.copy_ip + " "));
     if (span) btnCopy.appendChild(span);
   }
 
@@ -306,19 +282,16 @@ function applyStaticI18n(lang){
   // Chips labels
   const chipEls = document.querySelectorAll(".chips .chip");
   chipEls.forEach(chip => {
-    const txt = chip.textContent.trim();
-    if (txt.startsWith("Wipe:")) chip.childNodes[0].textContent = t.chip_wipe + " ";
-    if (txt.startsWith("Mode:")) chip.childNodes[0].textContent = t.chip_mode + " ";
-    if (txt.startsWith("Team limit:")) chip.childNodes[0].textContent = t.chip_team + " ";
-    if (txt.startsWith("Online:")) chip.childNodes[0].textContent = t.chip_online + " ";
+    const labelNode = chip.childNodes[0];
+    if (!labelNode || labelNode.nodeType !== 3) return;
+    const label = (labelNode.textContent || "").trim();
+    if (label.startsWith("Wipe:")) labelNode.textContent = t.chip_wipe + " ";
+    else if (label.startsWith("Mode:") || label.startsWith("Režim:")) labelNode.textContent = t.chip_mode + " ";
+    else if (label.startsWith("Team limit:") || label.startsWith("Limit týmu:")) labelNode.textContent = t.chip_team + " ";
+    else if (label.startsWith("Online:")) labelNode.textContent = t.chip_online + " ";
   });
 
-  // Document title (optional)
-  if (lang === "cz") document.title = "Rust Pohoda — Vanilla Quad (CZ)";
-  else document.title = "Rust Pohoda — Vanilla Quad";
-  // Dynamic cards translation
-  const t = dict[lang] || dict.sk;
-
+  // Dynamic cards on landing
   const wipeCardTitle = document.querySelector("#wipeCountdown h3");
   if (wipeCardTitle) wipeCardTitle.textContent = t.wipe_countdown_title;
 
@@ -339,7 +312,6 @@ function applyStaticI18n(lang){
 
   const wipeDesc = document.querySelector("#wipeInfo p");
   if (wipeDesc) wipeDesc.textContent = t.wipe_desc;
-
 }
 
 
@@ -437,7 +409,7 @@ async function renderMarkdownInto(targetSel, mdPath) {
 async function renderPageMarkdown(page){
   const config = APP_CONFIG || DEFAULT_CONFIG;
   // Re-apply static UI translations first
-  applyI18n();
+  applyStaticI18n(CURRENT_LANG);
 
   if (page === "home") {
     await initHome(config);
