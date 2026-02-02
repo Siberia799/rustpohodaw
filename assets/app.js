@@ -1,4 +1,4 @@
-// Rust Pohoda — static site JS (SK only)
+// Rust Pohoda — static site JS (SK/CZ)
 
 const CONNECT_LINK = "steam://run/252490//+connect%20203.16.163.84:24790";
 
@@ -18,6 +18,92 @@ const DEFAULT_CONFIG = {
 };
 
 const $ = (sel, root=document) => root.querySelector(sel);
+
+
+// === LANGUAGE (SK/CZ) ===
+const SUPPORTED_LANGS = ["sk","cz"];
+
+function normalizeLang(raw){
+  if(!raw) return null;
+  raw = String(raw).toLowerCase();
+  if (raw.startsWith("cs") || raw.startsWith("cz")) return "cz";
+  if (raw.startsWith("sk")) return "sk";
+  if (SUPPORTED_LANGS.includes(raw)) return raw;
+  return null;
+}
+
+function getUrlLang(){
+  try{
+    const u = new URL(window.location.href);
+    return normalizeLang(u.searchParams.get("lang"));
+  }catch(e){ return null; }
+}
+
+function detectLang(){
+  // Priority: URL ?lang=sk|cz -> saved -> browser -> fallback sk
+  const urlLang = getUrlLang();
+  if (urlLang) return urlLang;
+
+  const saved = normalizeLang(localStorage.getItem("lang"));
+  if (saved) return saved;
+
+  const nav = normalizeLang((navigator.languages && navigator.languages[0]) || navigator.language);
+  return nav || "sk";
+}
+
+let CURRENT_LANG = detectLang();
+
+function setLang(lang){
+  const next = normalizeLang(lang) || "sk";
+  CURRENT_LANG = next;
+  localStorage.setItem("lang", next);
+  document.documentElement.setAttribute("lang", next);
+  updateLangSwitcherUI(next);
+  // re-render markdown for current page
+  const page = document.body.getAttribute("data-page");
+  ensureLangSwitcher();
+  document.documentElement.setAttribute("lang", CURRENT_LANG);
+  updateLangSwitcherUI(CURRENT_LANG);
+  renderPageMarkdown(page).catch(()=>{});
+}
+
+function ensureLangSwitcher(){
+  if (document.getElementById("langSwitcher")) return;
+  const topbar = document.querySelector(".topbar-inner");
+  if (!topbar) return;
+
+  const wrap = document.createElement("div");
+  wrap.id = "langSwitcher";
+  wrap.style.display = "flex";
+  wrap.style.gap = "8px";
+  wrap.style.alignItems = "center";
+  wrap.style.marginLeft = "10px";
+
+  const mk = (label, lang) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn btn-ghost btn-small";
+    b.textContent = label;
+    b.setAttribute("data-lang-btn", lang);
+    b.addEventListener("click", () => setLang(lang));
+    return b;
+  };
+
+  wrap.appendChild(mk("SK", "sk"));
+  wrap.appendChild(mk("CZ", "cz"));
+
+  // place before CTA if possible, otherwise at end
+  const cta = document.querySelector(".topbar-inner .cta");
+  if (cta) topbar.insertBefore(wrap, cta);
+  else topbar.appendChild(wrap);
+}
+
+function updateLangSwitcherUI(lang){
+  document.querySelectorAll("[data-lang-btn]").forEach(btn => {
+    const bLang = btn.getAttribute("data-lang-btn");
+    btn.style.opacity = (bLang === lang) ? "1" : "0.65";
+  });
+}
 
 async function loadConfig(){
   try{
@@ -98,7 +184,7 @@ function mdToHtml(md="") {
   }
 }
 
-function mdPathFor(slug){ return `/content/${slug}.sk.md`; }
+function mdPathFor(slug){ return `/content/${slug}.${CURRENT_LANG}.md`; }
 
 async function renderMarkdownInto(targetSel, mdPath) {
   const el = $(targetSel);
@@ -461,7 +547,7 @@ async function renderGalleryFromManifest(gridEl, opts={}){
   const page = document.body.getAttribute("data-page");
   if (page === "home") {
     await initHome(config);
-    await renderMarkdownInto("#mdHome", mdPathFor("home"));
+    await renderPageMarkdown(page);
     const homeGrid = document.getElementById("homeShotsGrid");
     if (homeGrid) {
       await renderGalleryFromManifest(homeGrid, {
@@ -480,13 +566,13 @@ async function renderGalleryFromManifest(gridEl, opts={}){
     
   }
   if (page === "rules") {
-    await renderMarkdownInto("#mdRules", mdPathFor("rules"));
+    await renderPageMarkdown(page);
   }
   if (page === "vip") {
-    await renderMarkdownInto("#mdVip", mdPathFor("vip"));
+    await renderPageMarkdown(page);
   }
   if (page === "gallery") {
-    await renderMarkdownInto("#mdGallery", mdPathFor("gallery"));
+    await renderPageMarkdown(page);
     await initGallery();
   }
 })();
