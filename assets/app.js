@@ -43,28 +43,19 @@ function detectLang(){
   // Priority: URL ?lang=sk|cz -> saved -> browser -> fallback sk
   const urlLang = getUrlLang();
   if (urlLang) return urlLang;
-
   const saved = normalizeLang(localStorage.getItem("lang"));
   if (saved) return saved;
-
   const nav = normalizeLang((navigator.languages && navigator.languages[0]) || navigator.language);
   return nav || "sk";
 }
 
 let CURRENT_LANG = detectLang();
 
-function setLang(lang){
-  const next = normalizeLang(lang) || "sk";
-  CURRENT_LANG = next;
-  localStorage.setItem("lang", next);
-  document.documentElement.setAttribute("lang", next);
-  updateLangSwitcherUI(next);
-  // re-render markdown for current page
-  const page = document.body.getAttribute("data-page");
-  ensureLangSwitcher();
-  document.documentElement.setAttribute("lang", CURRENT_LANG);
-  updateLangSwitcherUI(CURRENT_LANG);
-  renderPageMarkdown(page).catch(()=>{});
+function updateLangSwitcherUI(lang){
+  document.querySelectorAll("[data-lang-btn]").forEach(btn => {
+    const bLang = btn.getAttribute("data-lang-btn");
+    btn.style.opacity = (bLang === lang) ? "1" : "0.65";
+  });
 }
 
 function ensureLangSwitcher(){
@@ -92,18 +83,29 @@ function ensureLangSwitcher(){
   wrap.appendChild(mk("SK", "sk"));
   wrap.appendChild(mk("CZ", "cz"));
 
-  // place before CTA if possible, otherwise at end
   const cta = document.querySelector(".topbar-inner .cta");
   if (cta) topbar.insertBefore(wrap, cta);
   else topbar.appendChild(wrap);
 }
 
-function updateLangSwitcherUI(lang){
-  document.querySelectorAll("[data-lang-btn]").forEach(btn => {
-    const bLang = btn.getAttribute("data-lang-btn");
-    btn.style.opacity = (bLang === lang) ? "1" : "0.65";
-  });
+function setLang(lang){
+  const next = normalizeLang(lang) || "sk";
+  CURRENT_LANG = next;
+  localStorage.setItem("lang", next);
+  document.documentElement.setAttribute("lang", next);
+  ensureLangSwitcher();
+  updateLangSwitcherUI(next);
+
+  const page = document.body.getAttribute("data-page");
+  renderPageMarkdown(page).catch(()=>{});
 }
+
+function initLang(){
+  document.documentElement.setAttribute("lang", CURRENT_LANG);
+  ensureLangSwitcher();
+  updateLangSwitcherUI(CURRENT_LANG);
+}
+
 
 async function loadConfig(){
   try{
@@ -543,11 +545,12 @@ async function renderGalleryFromManifest(gridEl, opts={}){
   document.body.classList.add('wipe-pre');
   const config = await loadConfig();
   await initCommon(config);
+  initLang();
 
   const page = document.body.getAttribute("data-page");
   if (page === "home") {
     await initHome(config);
-    await renderPageMarkdown(page);
+    await renderMarkdownInto("#mdHome", mdPathFor("home"));
     const homeGrid = document.getElementById("homeShotsGrid");
     if (homeGrid) {
       await renderGalleryFromManifest(homeGrid, {
@@ -566,13 +569,13 @@ async function renderGalleryFromManifest(gridEl, opts={}){
     
   }
   if (page === "rules") {
-    await renderPageMarkdown(page);
+    await renderMarkdownInto("#mdRules", mdPathFor("rules"));
   }
   if (page === "vip") {
-    await renderPageMarkdown(page);
+    await renderMarkdownInto("#mdVip", mdPathFor("vip"));
   }
   if (page === "gallery") {
-    await renderPageMarkdown(page);
+    await renderMarkdownInto("#mdGallery", mdPathFor("gallery"));
     await initGallery();
   }
 })();
