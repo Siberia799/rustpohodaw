@@ -6,7 +6,7 @@
 Jeden tým může mít maximálně **3 aktivní členy**.
 
 ## 2️⃣ Maximálně 10 000 hodin (tým)
-Součet herních hodin všech členů týmu nesmí přesáhnout **10 000 hodin**.
+Součet herních hodin všech členů týmu nesmí přesáhnout **10 000 hodin**
 
 ## 3️⃣ Veřejný Steam profil
 Každý hráč musí mít **veřejný Steam profil** kvůli ověření hodin a fair play.
