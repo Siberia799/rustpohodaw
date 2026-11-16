@@ -1,0 +1,6 @@
+{
+  "name": "RustPohoda UI Redesign",
+  "description": "A premium, fully redesigned, modern gaming-style user interface for CZ/SK Rust Pohoda.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

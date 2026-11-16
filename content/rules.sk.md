@@ -2,7 +2,7 @@
 
 Dodržuj fair play a rešpektuj ostatných hráčov.
 
-- 1. Maximálny počet hráčov v tíme – 4 (Quad). Jeden tím môže mať maximálne 4 aktívnych členov.
+- 1. Maximálny počet hráčov v tíme – 3 (Trio). Jeden tím môže mať maximálne 3 aktívnych členov.
 - 2. Maximálne 10 000 hodín (tím). Súčet herných hodín všetkých členov tímu nesmie presiahnuť 10 000 hodín.
 - 3. Verejný Steam profil. Každý hráč musí mať verejný Steam profil kvôli overeniu hodín a fair play.
 - 4. Zákaz alt účtov. Používanie viacerých Steam účtov (altov) za účelom obchádzania pravidiel je zakázané.
